@@ -1,0 +1,73 @@
+<html>
+    <head>
+        <title>$i18n.getText('requestedfields.config.title')</title>
+        <meta content="admin" name="decorator"/>
+        <link rel="stylesheet" type="text/css" media="print" href="/styles/combined-printable.css">
+        <link type="text/css" rel="StyleSheet" media="all" href="/styles/combined.css"/>
+        <script language="javascript">
+            jQuery(document).ready(function() {
+                jQuery('#reqType').change(function() {
+                    if (jQuery(this).val() == "get") {
+                        jQuery('#reqData').attr("readonly", true);
+                        jQuery('#reqData').val("");
+                    } else {
+                        jQuery('#reqData').attr("readonly", false);
+                        jQuery('#reqData').val(jQuery('#reqDataHidden').val());
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        #if($action.hasAnyErrors())
+        <div class="formErrors">
+            <table class="errorArea">#foreach ($error in $action.getErrorMessages())<tr><td>${error}</td></tr>#end</table>
+            <table class="errorArea">#foreach ($error in $action.errors)<tr><td>${error}</td></tr>#end</table>
+        </div>
+        #end
+
+        <h2 class="formtitle">$i18n.getText('requestedfields.config.title')</h2>
+        <p>$i18n.getText('requestedfields.config.usage')</p>
+        <form action="EditCurrencyConfig.jspa" method="post">
+            <input type="hidden" name="atl_token" value="$atl_token"/>
+            <input type="hidden" name="fieldConfigId" value="$fieldConfigId">
+            <input type="hidden" id="reqDataHidden" name="reqDataHidden" value="$!action.getReqData()">
+            <table>
+                <tr>
+                    <td>$i18n.getText('requestedfields.config.url')*:</td>
+                    <td><input type="text" id="url" name="url" value="$!{action.getUrl()}"/></td>
+                </tr>
+                <tr>
+                    <td>$i18n.getText('requestedfields.config.user'):</td>
+                    <td><input type="text" id="user" name="user" value="$!{action.getUser()}"/></td>
+                </tr>
+                <tr>
+                    <td>$i18n.getText('requestedfields.config.password'):</td>
+                    <td><input type="password" id="password" name="password" value="$!{action.getPassword()}"/></td>
+                </tr>
+                <tr>
+                    <td>$i18n.getText('requestedfields.config.reqtype')*:</td>
+                    <td>
+                        <select id="reqType" name="reqType">
+                            <option #if($action.getReqType() == "GET")selected="selected"#end value="GET">GET</option>
+                            <option #if($action.getReqType() == "POST")selected="selected"#end value="POST">POST</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>$i18n.getText('requestedfields.config.reqdata'):</td>
+                    <td><textarea readonly="false" cols="60" rows="10" id="reqData" name="reqData">#if($action.getReqData())$!action.getReqData()#end</textarea></td>
+                </tr>
+                <tr>
+                    <td>$i18n.getText('requestedfields.config.reqPath')*:</td>
+                    <td><input type="text" id="reqPath" name="reqPath" value="$!{action.getReqPath()}"/></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="submit" name="Save" id="Save" value="$i18n.getText('common.words.done')" accesskey="S" title="Press Ctrl+S to submit form" class="spaced"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>

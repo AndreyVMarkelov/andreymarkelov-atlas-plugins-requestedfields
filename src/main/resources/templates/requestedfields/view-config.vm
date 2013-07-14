@@ -1,0 +1,34 @@
+#if($url)
+<table style="border: 1px solid black;">
+    <tr>
+        <td>$i18n.getText('requestedfields.config.url')</td>
+        <td>$url</td>
+    </tr>
+    #if($user != "")
+    <tr>
+        <td>$i18n.getText('requestedfields.config.user')</td>
+        <td>$user</td>
+    </tr>
+    #end
+    #if($password != "")
+    <tr>
+        <td>$i18n.getText('requestedfields.config.password')</td>
+        <td>*****</td>
+    </tr>
+    #end
+    <tr>
+        <td>$i18n.getText('requestedfields.config.reqtype')</td>
+        <td>$reqType</td>
+    </tr>
+    #if($reqData != "")
+    <tr>
+        <td>$i18n.getText('requestedfields.config.reqdata')</td>
+        <td>$reqData</td>
+    </tr>
+    #end
+    <tr>
+        <td>$i18n.getText('requestedfields.config.reqPath'):</td>
+        <td>$reqPath</td>
+    </tr>
+</table>
+#end

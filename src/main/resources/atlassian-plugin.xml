@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
+    <plugin-info>
+        <description>${project.description}</description>
+        <version>${project.version}</version>
+        <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+        <param name="plugin-icon">images/logo.png</param>
+        <param name="plugin-logo">images/images.jpg</param>
+    </plugin-info>
+
+    <!-- add our i18n resource -->
+    <resource type="i18n" name="i18n" location="i18n.requestedfields"/>
+
+    <!-- add our web resources -->
+    <web-resource key="requestedfields-resources" name="requestedfields Web Resources">
+        <dependency>com.atlassian.auiplugin:ajs</dependency>
+        <resource type="download" name="requestedfields.css" location="/css/requestedfields.css"/>
+        <resource type="download" name="requestedfields.js" location="/js/requestedfields.js"/>
+        <resource type="download" name="images/" location="/images"/>
+        <context>requestedfields</context>
+    </web-resource>
+
+    <webwork1 key="requestedfields-configaction" name="Currency configuration action" class="java.lang.Object">
+        <description>The action for editing a currency custom field type configuration.</description>
+        <actions>
+            <action name="ru.andreymarkelov.atlas.plugins.requestedfiedls.EditConfiguration" alias="EditCurrencyConfig">
+                <view name="input">/templates/requestedfields/edit-config.vm</view>
+            </action>
+        </actions>
+    </webwork1>
+
+    <!-- import from the product container -->
+    <component key="requestedfields-plugindata" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.PluginDataImpl" public="true">
+        <interface>ru.andreymarkelov.atlas.plugins.requestedfiedls.PluginData</interface>
+    </component>
+    <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
+    <component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/>
+    <component-import key="renderer" interface="com.atlassian.templaterenderer.velocity.one.six.VelocityTemplateRenderer" />
+
+    <customfield-type name="JSON Request Custom Field" i18n-name-key="json-request-custom-field.name" key="json-request-custom-field" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.JsonRequestCustomField">
+        <description key="json-request-custom-field.description">The Json Request Custom Field Plugin</description>
+        <resource name="view" type="velocity" location="/templates/requestedfields/view.vm"/>
+        <resource name="edit" type="velocity" location="/templates/requestedfields/edit.vm"/>
+    </customfield-type>
+
+    <customfield-searcher key="json-request-custom-field-searcher" name="JSON Request Custom Field Searcher"
+                          i18n-name-key="json-request-custom-field.searcher" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.SelectTextCustomFieldSearcher">
+        <description>Allow searching for JSON Request Custom Field</description>
+        <resource type="velocity" name="label" location="/templates/requestedfields/label-select.vm"/>
+        <resource type="velocity" name="search" location="/templates/requestedfields/search-select.vm"/>
+        <resource type="velocity" name="view" location="/templates/requestedfields/view-search-select.vm"/>
+        <valid-customfield-type package="${project.groupId}.${project.artifactId}" key="json-request-custom-field"/>
+    </customfield-searcher>
+</atlassian-plugin>

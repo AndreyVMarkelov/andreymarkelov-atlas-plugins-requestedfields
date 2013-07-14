@@ -1,0 +1,8 @@
+$!{auiparams.put("controlHeaderClass", "aui-field-text")}
+#searcherEditHeader (${customField.id} ${customField.name})
+    <select class="select" id="searcher-$customField.id" name="$customField.id">
+        <option></option>
+        #foreach($val in $vals)<option value="$val">$val</option>#end
+    </select>
+#searcherEditFooter (${customField.id} ${customField.description})
+$!{auiparams.clear()}
