@@ -64,7 +64,7 @@ public class EditConfiguration extends AbstractEditConfigurationItemAction {
         }
 
         if (reqPath ==null || reqPath.length() == 0) {
-            addErrorMessage(getText("requestedfields.config.error.reqPath"));
+            addErrorMessage(getText(isXmlField() ? "requestedfields.config.error.reqPathXML" : "requestedfields.config.error.reqPathJSON"));
         }
     }
 
@@ -90,6 +90,10 @@ public class EditConfiguration extends AbstractEditConfigurationItemAction {
 
     public String getUser() {
         return user;
+    }
+
+    public boolean isXmlField() {
+        return getCustomField().getCustomFieldType().getKey().equals("ru.andreymarkelov.atlas.plugins.requestedfields:xml-request-custom-field");
     }
 
     public void setPassword(String password) {

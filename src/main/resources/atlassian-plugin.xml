@@ -44,6 +44,12 @@
         <resource name="edit" type="velocity" location="/templates/requestedfields/edit.vm"/>
     </customfield-type>
 
+    <customfield-type name="XML Request Custom Field" i18n-name-key="xml-request-custom-field.name" key="xml-request-custom-field" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.XmlRequestCustomField">
+        <description key="xml-request-custom-field.description">The XML Request Custom Field Plugin</description>
+        <resource name="view" type="velocity" location="/templates/requestedfields/view.vm"/>
+        <resource name="edit" type="velocity" location="/templates/requestedfields/edit.vm"/>
+    </customfield-type>
+
     <customfield-searcher key="json-request-custom-field-searcher" name="JSON Request Custom Field Searcher"
                           i18n-name-key="json-request-custom-field.searcher" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.SelectTextCustomFieldSearcher">
         <description>Allow searching for JSON Request Custom Field</description>
@@ -51,5 +57,14 @@
         <resource type="velocity" name="search" location="/templates/requestedfields/search-select.vm"/>
         <resource type="velocity" name="view" location="/templates/requestedfields/view-search-select.vm"/>
         <valid-customfield-type package="${project.groupId}.${project.artifactId}" key="json-request-custom-field"/>
+    </customfield-searcher>
+
+    <customfield-searcher key="xml-request-custom-field-searcher" name="XML Request Custom Field Searcher"
+                          i18n-name-key="xml-request-custom-field.searcher" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.SelectTextCustomFieldSearcher">
+        <description>Allow searching for JSON Request Custom Field</description>
+        <resource type="velocity" name="label" location="/templates/requestedfields/label-select.vm"/>
+        <resource type="velocity" name="search" location="/templates/requestedfields/search-select.vm"/>
+        <resource type="velocity" name="view" location="/templates/requestedfields/view-search-select.vm"/>
+        <valid-customfield-type package="${project.groupId}.${project.artifactId}" key="xml-request-custom-field"/>
     </customfield-searcher>
 </atlassian-plugin>

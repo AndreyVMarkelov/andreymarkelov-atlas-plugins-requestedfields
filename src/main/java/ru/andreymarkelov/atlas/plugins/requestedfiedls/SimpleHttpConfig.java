@@ -20,9 +20,12 @@ public class SimpleHttpConfig implements FieldConfigItemType {
 
     private final PluginData pluginData;
 
-    public SimpleHttpConfig(TemplateRenderer renderer, PluginData pluginData) {
+    private final boolean isXmlField;
+
+    public SimpleHttpConfig(TemplateRenderer renderer, PluginData pluginData, boolean isXmlField) {
         this.renderer = renderer;
         this.pluginData = pluginData;
+        this.isXmlField = isXmlField;
     }
 
     @Override
@@ -47,12 +50,12 @@ public class SimpleHttpConfig implements FieldConfigItemType {
 
     @Override
     public String getDisplayName() {
-        return "JSON Http Settings";
+        return isXmlField ? "XML Http Settings" : "JSON Http Settings";
     }
 
     @Override
     public String getDisplayNameKey() {
-        return "JSON Http Settings";
+        return isXmlField ? "XML Http Settings" : "JSON Http Settings";
     }
 
     @Override
@@ -72,6 +75,7 @@ public class SimpleHttpConfig implements FieldConfigItemType {
             parms.put("reqType", data.getReqType());
             parms.put("reqData", data.getReqData());
             parms.put("reqPath", data.getReqPath());
+            parms.put("isXmlField", isXmlField);
         }
         StringWriter sw = new StringWriter();
         try {

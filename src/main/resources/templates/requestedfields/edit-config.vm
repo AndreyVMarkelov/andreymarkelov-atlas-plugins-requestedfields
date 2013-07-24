@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>$i18n.getText('requestedfields.config.title')</title>
+        <title>#if($action.isXmlField())$i18n.getText('requestedfields.config.titleXML')#else$i18n.getText('requestedfields.config.titleJSON')#end</title>
         <meta content="admin" name="decorator"/>
         <link rel="stylesheet" type="text/css" media="print" href="/styles/combined-printable.css">
         <link type="text/css" rel="StyleSheet" media="all" href="/styles/combined.css"/>
@@ -26,8 +26,8 @@
         </div>
         #end
 
-        <h2 class="formtitle">$i18n.getText('requestedfields.config.title')</h2>
-        <p>$i18n.getText('requestedfields.config.usage')</p>
+        <h2 class="formtitle">#if($action.isXmlField())$i18n.getText('requestedfields.config.titleXML')#else$i18n.getText('requestedfields.config.titleJSON')#end</h2>
+        <p>#if($action.isXmlField())$i18n.getText('requestedfields.config.usageXML')#else$i18n.getText('requestedfields.config.usageJSON')#end</p>
         <form action="EditCurrencyConfig.jspa" method="post">
             <input type="hidden" name="atl_token" value="$atl_token"/>
             <input type="hidden" name="fieldConfigId" value="$fieldConfigId">
@@ -59,7 +59,7 @@
                     <td><textarea readonly="false" cols="60" rows="10" id="reqData" name="reqData">#if($action.getReqData())$!action.getReqData()#end</textarea></td>
                 </tr>
                 <tr>
-                    <td>$i18n.getText('requestedfields.config.reqPath')*:</td>
+                    <td>#if($action.isXmlField())$i18n.getText('requestedfields.config.reqPathXML')#else$i18n.getText('requestedfields.config.reqPathJSON')#end*:</td>
                     <td><input type="text" id="reqPath" name="reqPath" value="$!{action.getReqPath()}"/></td>
                 </tr>
                 <tr>

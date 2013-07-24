@@ -27,7 +27,7 @@
     </tr>
     #end
     <tr>
-        <td>$i18n.getText('requestedfields.config.reqPath'):</td>
+        <td>#if($isXmlField)${i18n.getText('requestedfields.config.reqPathXML')}:#else${i18n.getText('requestedfields.config.reqPathJSON')}:#end</td>
         <td>$reqPath</td>
     </tr>
 </table>

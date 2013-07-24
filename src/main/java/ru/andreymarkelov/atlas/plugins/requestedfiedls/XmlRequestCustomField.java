@@ -1,11 +1,22 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.customfields.impl.TextCFType;
@@ -18,14 +29,14 @@ import com.atlassian.jira.issue.fields.layout.field.FieldLayoutItem;
 import com.atlassian.templaterenderer.TemplateRenderer;
 import com.nebhale.jsonpath.JsonPath;
 
-public class JsonRequestCustomField extends TextCFType {
-    private static final Logger log = LoggerFactory.getLogger(JsonRequestCustomField.class);
+public class XmlRequestCustomField extends TextCFType  {
+	private static final Logger log = LoggerFactory.getLogger(XmlRequestCustomField.class);
 
     private final PluginData pluginData;
 
     private final TemplateRenderer renderer;
 
-    public JsonRequestCustomField(
+    public XmlRequestCustomField(
             CustomFieldValuePersister customFieldValuePersister,
             GenericConfigManager genericConfigManager,
             PluginData pluginData,
@@ -38,7 +49,7 @@ public class JsonRequestCustomField extends TextCFType {
     @Override
     public List<FieldConfigItemType> getConfigurationItemTypes() {
         final List<FieldConfigItemType> configurationItemTypes = super.getConfigurationItemTypes();
-        configurationItemTypes.add(new SimpleHttpConfig(renderer, pluginData, false));
+        configurationItemTypes.add(new SimpleHttpConfig(renderer, pluginData, true));
         return configurationItemTypes;
     }
 
@@ -59,16 +70,29 @@ public class JsonRequestCustomField extends TextCFType {
             try {
                 //--> http request
                 HttpSender httpService = new HttpSender(data.getUrl(), data.getReqType(), data.getUser(), data.getPassword());
-                String json = httpService.call(data.getReqData());
-                JsonPath namePath = JsonPath.compile(data.getReqPath());
-                List<String> vals = namePath.read(json, List.class);
+                String xml = httpService.call(data.getReqData());
+
+                List<String> vals = new ArrayList<String>();
+                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                factory.setNamespaceAware(true);
+                DocumentBuilder builder = factory.newDocumentBuilder();
+                Document doc = builder.parse(new ByteArrayInputStream(xml.getBytes()));
+                XPathFactory xpathfactory = XPathFactory.newInstance();
+                XPath xpath = xpathfactory.newXPath();
+                XPathExpression expr = xpath.compile(data.getReqPath());
+                Object result = expr.evaluate(doc, XPathConstants.NODESET);
+                NodeList nodes = (NodeList) result;
+                for (int i = 0; i < nodes.getLength(); i++) {
+                    vals.add(nodes.item(i).getNodeValue());
+                }
+
                 //<-- http request
                 Object defaultValue = field.getDefaultValue(issue);
                 if (defaultValue != null) {
                     vals.add(0, defaultValue.toString());
                 }
 
-                map.put("json", json);
+                map.put("xml", xml);
                 if (vals != null) {
                     if (!vals.isEmpty()) {
                         Collections.sort(vals);
@@ -76,7 +100,7 @@ public class JsonRequestCustomField extends TextCFType {
                     map.put("vals", vals);
                 }
             } catch (Throwable th) {
-                log.error("JsonRequestCustomField::getVelocityParameters - error renderring", th);
+                log.error("XmlRequestCustomField::getVelocityParameters - error renderring", th);
                 map.put("error", th.getMessage());
             }
         } else {
