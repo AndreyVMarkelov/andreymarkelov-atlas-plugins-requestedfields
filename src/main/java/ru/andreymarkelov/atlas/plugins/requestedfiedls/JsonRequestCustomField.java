@@ -58,7 +58,7 @@ public class JsonRequestCustomField extends TextCFType {
         if (data != null) {
             try {
                 //--> http request
-                HttpSender httpService = new HttpSender(data.getUrl(), data.getReqType(), data.getUser(), data.getPassword());
+                HttpSender httpService = new HttpSender(data.getUrl(), data.getReqType(), data.getReqDataType(), data.getUser(), data.getPassword());
                 String json = httpService.call(data.getReqData());
                 JsonPath namePath = JsonPath.compile(data.getReqPath());
                 List<String> vals = namePath.read(json, List.class);

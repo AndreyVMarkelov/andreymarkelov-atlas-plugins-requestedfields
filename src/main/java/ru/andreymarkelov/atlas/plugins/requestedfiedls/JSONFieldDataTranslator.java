@@ -18,6 +18,7 @@ public class JSONFieldDataTranslator {
             data.setReqType(jsonObj.getString("reqType"));
             data.setReqData(jsonObj.getString("reqData"));
             data.setReqPath(jsonObj.getString("reqPath"));
+            data.setReqDataType(jsonObj.getString("reqDataType"));
             return data;
         } catch (JSONException e) {
             logger.error("Error parse JSON", e);
@@ -34,6 +35,7 @@ public class JSONFieldDataTranslator {
             jsonObj.put("reqType", obj.getReqType());
             jsonObj.put("reqData", obj.getReqData());
             jsonObj.put("reqPath", obj.getReqPath());
+            jsonObj.put("reqDataType", obj.getReqDataType());
         } catch (JSONException e) {
             logger.error("Error write JSON", e);
             return null;

@@ -13,6 +13,8 @@ public class JSONFieldData {
 
     private String reqPath;
 
+    private String reqDataType;
+
     public JSONFieldData() {
     }
 
@@ -21,12 +23,14 @@ public class JSONFieldData {
             String user,
             String password,
             String reqType,
+            String reqDataType,
             String reqData,
             String reqPath) {
         this.url = url;
         this.user = user;
         this.password = password;
         this.reqType = reqType;
+        this.reqDataType = reqDataType;
         this.reqData = reqData;
         this.reqPath = reqPath;
     }
@@ -37,6 +41,10 @@ public class JSONFieldData {
 
     public String getReqData() {
         return reqData;
+    }
+
+    public String getReqDataType() {
+        return reqDataType;
     }
 
     public String getReqPath() {
@@ -63,6 +71,10 @@ public class JSONFieldData {
         this.reqData = reqData;
     }
 
+    public void setReqDataType(String reqDataType) {
+        this.reqDataType = reqDataType;
+    }
+
     public void setReqPath(String reqPath) {
         this.reqPath = reqPath;
     }
@@ -82,6 +94,7 @@ public class JSONFieldData {
     @Override
     public String toString() {
         return "JSONFieldData[url=" + url + ", user=" + user + ", password="
-                + password + ", reqType=" + reqType + ", reqData=" + reqData + ", reqPath=" + reqPath + "]";
+                + password + ", reqType=" + reqType + ", reqData=" + reqData + ", reqPath=" + reqPath +
+                ", reqDataType=" + reqDataType + "]";
     }
 }

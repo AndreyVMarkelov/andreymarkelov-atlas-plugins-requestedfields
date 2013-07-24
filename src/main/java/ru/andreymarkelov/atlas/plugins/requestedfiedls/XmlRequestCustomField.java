@@ -13,9 +13,11 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.atlassian.jira.issue.Issue;
@@ -27,7 +29,6 @@ import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.atlassian.jira.issue.fields.config.FieldConfigItemType;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutItem;
 import com.atlassian.templaterenderer.TemplateRenderer;
-import com.nebhale.jsonpath.JsonPath;
 
 public class XmlRequestCustomField extends TextCFType  {
 	private static final Logger log = LoggerFactory.getLogger(XmlRequestCustomField.class);
@@ -69,7 +70,7 @@ public class XmlRequestCustomField extends TextCFType  {
         if (data != null) {
             try {
                 //--> http request
-                HttpSender httpService = new HttpSender(data.getUrl(), data.getReqType(), data.getUser(), data.getPassword());
+                HttpSender httpService = new HttpSender(data.getUrl(), data.getReqType(), data.getReqDataType(), data.getUser(), data.getPassword());
                 String xml = httpService.call(data.getReqData());
 
                 List<String> vals = new ArrayList<String>();
@@ -83,7 +84,13 @@ public class XmlRequestCustomField extends TextCFType  {
                 Object result = expr.evaluate(doc, XPathConstants.NODESET);
                 NodeList nodes = (NodeList) result;
                 for (int i = 0; i < nodes.getLength(); i++) {
-                    vals.add(nodes.item(i).getNodeValue());
+                    Node node = nodes.item(i);
+                    if (node.getNodeType() == Node.TEXT_NODE) {
+                        String nodeText = node.getTextContent();
+                        if (!StringUtils.isEmpty(nodeText)) {
+                            vals.add(nodes.item(i).getNodeValue());
+                        }
+                    }
                 }
 
                 //<-- http request

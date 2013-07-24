@@ -53,7 +53,8 @@ public class EditConfiguration extends AbstractEditConfigurationItemAction {
             return "securitybreach";
         }
 
-        pluginData.storeJSONFieldData(getFieldConfig(), new JSONFieldData(url, user, password, reqType, reqData, reqPath));
+        String reqDataType = isXmlField() ? "xml" : "json";
+        pluginData.storeJSONFieldData(getFieldConfig(), new JSONFieldData(url, user, password, reqType, reqDataType, reqData, reqPath));
         return getRedirect("/secure/admin/ConfigureCustomField!default.jspa?customFieldId=" + getFieldConfig().getCustomField().getIdAsLong().toString());
     }
 

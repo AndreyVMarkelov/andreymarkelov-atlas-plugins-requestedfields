@@ -9,7 +9,7 @@
         <div class="formErrors">$textutils.htmlEncode($!error)</div>
     #else
         <select class="select" name="$customField.id" id="$customField.id">
-            #foreach($val in $vals)<option value="$val">$val</option>#end
+            #foreach($val in $vals)<option #if($value && $value == $val)selected="selected"#end value="$val">$val</option>#end
         </select>
     #end
 #end

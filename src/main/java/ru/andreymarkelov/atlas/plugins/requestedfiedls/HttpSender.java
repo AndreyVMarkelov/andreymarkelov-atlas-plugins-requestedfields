@@ -39,11 +39,17 @@ public class HttpSender {
     private String user;
 
     /**
+     * Data type.
+     */
+    private String reqDataType;
+
+    /**
      * Constructor.
      */
-    public HttpSender(String bindingUrl, String type, String user, String password) {
+    public HttpSender(String bindingUrl, String type, String reqDataType, String user, String password) {
         this.bindingUrl = bindingUrl;
         this.type = type;
+        this.reqDataType = reqDataType;
         this.user = user;
         this.password = password;
     }
@@ -62,7 +68,7 @@ public class HttpSender {
             httpConn.setAllowUserInteraction(true);
             httpConn.setRequestMethod(type);
             httpConn.setRequestProperty("Host", url.getHost());
-            httpConn.setRequestProperty("Content-Type","application/json; charset=utf-8");
+            httpConn.setRequestProperty("Content-Type","application/" + reqDataType + "; charset=utf-8");
             if (isAuth()) {
                 httpConn.setRequestProperty("Authorization", "Basic " + getAuthRealm());
             }
