@@ -1,0 +1,5 @@
+#if($value)
+<table>
+#foreach($s in $list)<tr><td>$s</td></tr>#end
+</table>
+#end

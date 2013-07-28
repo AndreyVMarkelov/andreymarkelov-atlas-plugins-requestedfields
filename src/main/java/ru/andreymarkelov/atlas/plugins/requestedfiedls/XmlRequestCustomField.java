@@ -31,7 +31,7 @@ import com.atlassian.jira.issue.fields.layout.field.FieldLayoutItem;
 import com.atlassian.templaterenderer.TemplateRenderer;
 
 public class XmlRequestCustomField extends TextCFType  {
-	private static final Logger log = LoggerFactory.getLogger(XmlRequestCustomField.class);
+    private static final Logger log = LoggerFactory.getLogger(XmlRequestCustomField.class);
 
     private final PluginData pluginData;
 
@@ -54,7 +54,7 @@ public class XmlRequestCustomField extends TextCFType  {
         return configurationItemTypes;
     }
 
-    @Override
+	@Override
     public Map<String, Object> getVelocityParameters(
             final Issue issue,
             final CustomField field,

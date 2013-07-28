@@ -3,10 +3,8 @@ package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.customfields.impl.TextCFType;
 import com.atlassian.jira.issue.customfields.manager.GenericConfigManager;

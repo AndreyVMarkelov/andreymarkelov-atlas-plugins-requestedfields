@@ -38,6 +38,7 @@
     <component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/>
     <component-import key="renderer" interface="com.atlassian.templaterenderer.velocity.one.six.VelocityTemplateRenderer" />
 
+    <!-- Fields -->
     <customfield-type name="JSON Request Custom Field" i18n-name-key="json-request-custom-field.name" key="json-request-custom-field" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.JsonRequestCustomField">
         <description key="json-request-custom-field.description">The Json Request Custom Field</description>
         <resource name="view" type="velocity" location="/templates/requestedfields/view.vm"/>
@@ -50,12 +51,20 @@
         <resource name="edit" type="velocity" location="/templates/requestedfields/edit.vm"/>
     </customfield-type>
 
+    <!-- Multi fields -->
     <customfield-type name="JSON Multi Request Custom Field" i18n-name-key="json-request-multi-custom-field.name" key="json-multi-request-custom-field" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.JsonRequestMultiCustomField">
         <description key="json-request-multi-custom-field.description">The JSON Multi Request Custom Field</description>
         <resource name="view" type="velocity" location="/templates/requestedfields/multi-view.vm"/>
         <resource name="edit" type="velocity" location="/templates/requestedfields/multi-edit.vm"/>
     </customfield-type>
 
+    <customfield-type name="XML Multi Request Custom Field" i18n-name-key="xml-request-multi-custom-field.name" key="xml-multi-request-custom-field" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.XmlRequestMultiCustomField">
+        <description key="xml-request-multi-custom-field.description">The XML Multi Request Custom Field</description>
+        <resource name="view" type="velocity" location="/templates/requestedfields/multi-view.vm"/>
+        <resource name="edit" type="velocity" location="/templates/requestedfields/multi-edit.vm"/>
+    </customfield-type>
+
+    <!-- Searches -->
     <customfield-searcher key="json-request-custom-field-searcher" name="JSON Request Custom Field Searcher"
                           i18n-name-key="json-request-custom-field.searcher" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.SelectTextCustomFieldSearcher">
         <description>Allow searching for JSON Request Custom Field</description>
@@ -67,7 +76,7 @@
 
     <customfield-searcher key="xml-request-custom-field-searcher" name="XML Request Custom Field Searcher"
                           i18n-name-key="xml-request-custom-field.searcher" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.SelectTextCustomFieldSearcher">
-        <description>Allow searching for JSON Request Custom Field</description>
+        <description>Allow searching for XML Request Custom Field</description>
         <resource type="velocity" name="label" location="/templates/requestedfields/label-select.vm"/>
         <resource type="velocity" name="search" location="/templates/requestedfields/search-select.vm"/>
         <resource type="velocity" name="view" location="/templates/requestedfields/view-search-select.vm"/>
@@ -75,11 +84,20 @@
     </customfield-searcher>
 
     <customfield-searcher key="json-request-multi-custom-field-searcher" name="JSON Multi Request Custom Field Searcher"
-                          i18n-name-key="xml-request-multicustom-field.searcher" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.SelectTextCustomFieldSearcher">
+                          i18n-name-key="json-request-multicustom-field.searcher" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.SimpleListSearcher">
         <description>Allow searching for JSON Multi Request Custom Field</description>
         <resource type="velocity" name="label" location="/templates/requestedfields/label-multiselect.vm"/>
         <resource type="velocity" name="search" location="/templates/requestedfields/search-multiselect.vm"/>
         <resource type="velocity" name="view" location="/templates/requestedfields/view-search-multiselect.vm"/>
         <valid-customfield-type package="${project.groupId}.${project.artifactId}" key="json-multi-request-custom-field"/>
+    </customfield-searcher>
+
+    <customfield-searcher key="xml-request-multi-custom-field-searcher" name="XML Multi Request Custom Field Searcher"
+                          i18n-name-key="xml-request-multicustom-field.searcher" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.SimpleListSearcher">
+        <description>Allow searching for XML Multi Request Custom Field</description>
+        <resource type="velocity" name="label" location="/templates/requestedfields/label-multiselect.vm"/>
+        <resource type="velocity" name="search" location="/templates/requestedfields/search-multiselect.vm"/>
+        <resource type="velocity" name="view" location="/templates/requestedfields/view-search-multiselect.vm"/>
+        <valid-customfield-type package="${project.groupId}.${project.artifactId}" key="xml-multi-request-custom-field"/>
     </customfield-searcher>
 </atlassian-plugin>

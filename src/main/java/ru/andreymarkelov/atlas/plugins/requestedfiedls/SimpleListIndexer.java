@@ -1,19 +1,21 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 
-import java.util.Collection;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.jira.issue.index.indexers.impl.AbstractCustomFieldIndexer;
+import com.atlassian.jira.util.json.JSONArray;
+import com.atlassian.jira.util.json.JSONException;
 import com.atlassian.jira.web.FieldVisibilityManager;
 
-public class JsonRequestMultiCustomFieldIndexer extends AbstractCustomFieldIndexer {
+public class SimpleListIndexer extends AbstractCustomFieldIndexer {
 
     private final CustomField customField;
 
-    public JsonRequestMultiCustomFieldIndexer(
+    public SimpleListIndexer(
             FieldVisibilityManager fieldVisibilityManager,
             CustomField customField) {
         super(fieldVisibilityManager, customField);
@@ -22,10 +24,10 @@ public class JsonRequestMultiCustomFieldIndexer extends AbstractCustomFieldIndex
 
     public void addDocumentFields(final Document doc, final Issue issue, final Field.Index indexType) {
         final Object value = customField.getValue(issue);
-        if (value != null && value instanceof Collection) {
-            Collection<String> versions = (Collection<String>) value;
-            for (final String string : versions) {
-                doc.add(new Field(getDocumentFieldId(), string, Field.Store.YES, indexType));
+        if (value != null) {
+            List<String> data = parseData(value);
+            for (String s : data) {
+                doc.add(new Field(getDocumentFieldId(), s, Field.Store.YES, indexType));
             }
         }
     }
@@ -38,5 +40,21 @@ public class JsonRequestMultiCustomFieldIndexer extends AbstractCustomFieldIndex
     @Override
     public void addDocumentFieldsSearchable(final Document doc, final Issue issue) {
         addDocumentFields(doc, issue, Field.Index.NOT_ANALYZED_NO_NORMS);
+    }
+
+    private List<String> parseData(Object obj) {
+        List<String> list = new ArrayList<String>();
+
+        if (obj != null) {
+            try {
+                JSONArray jsonArray = new JSONArray(obj.toString());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    list.add(jsonArray.getString(i));
+                }
+            } catch (JSONException e) {
+                //do nothing
+            }
+        }
+        return list;
     }
 }

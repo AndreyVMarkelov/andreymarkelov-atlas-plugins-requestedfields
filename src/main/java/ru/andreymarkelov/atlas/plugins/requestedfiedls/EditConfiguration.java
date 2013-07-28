@@ -94,7 +94,8 @@ public class EditConfiguration extends AbstractEditConfigurationItemAction {
     }
 
     public boolean isXmlField() {
-        return getCustomField().getCustomFieldType().getKey().equals("ru.andreymarkelov.atlas.plugins.requestedfields:xml-request-custom-field");
+        return (getCustomField().getCustomFieldType().getKey().equals("ru.andreymarkelov.atlas.plugins.requestedfields:xml-request-custom-field") ||
+                getCustomField().getCustomFieldType().getKey().equals("ru.andreymarkelov.atlas.plugins.requestedfields:xml-multi-request-custom-field"));
     }
 
     public void setPassword(String password) {
