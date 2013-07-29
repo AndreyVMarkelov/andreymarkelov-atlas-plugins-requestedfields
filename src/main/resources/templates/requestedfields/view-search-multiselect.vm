@@ -1,6 +1,1 @@
-##disable_html_escaping() TODO REENABLE
-#searcherHeaderNoField ($searcherId $i18n.getText($searcherNameKey))
-#if ($value)
-    "$textutils.htmlEncode($value)"
-#end
-#searcherFooter ($searcherId)
+#if($value)$!value#end

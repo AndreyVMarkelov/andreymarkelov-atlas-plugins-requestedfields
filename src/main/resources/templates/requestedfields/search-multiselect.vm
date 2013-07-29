@@ -1,6 +1,5 @@
-##disable_html_escaping() TODO REENABLE
-#searcherHeaderNoField ($searcherId $i18n.getText($searcherNameKey))
-#if ($value)
-    "$textutils.htmlEncode($value)"
-#end
-#searcherFooter ($searcherId)
+$!{auiparams.put("controlHeaderClass", "aui-field-text")}
+#searcherEditHeader (${customField.id} ${customField.name})
+    <input class="text" id="searcher-$customField.id" name="$customField.id"/>
+#searcherEditFooter (${customField.id} ${customField.description})
+$!{auiparams.clear()}
