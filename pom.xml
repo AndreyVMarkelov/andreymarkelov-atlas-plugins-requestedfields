@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.andreymarkelov.atlas.plugins</groupId>
     <artifactId>requestedfields</artifactId>
-    <version>1.2</version>
+    <version>1.0.2</version>
     <organization>
         <name>Andrey Markelov</name>
         <url>http://ru.linkedin.com/in/andreymarkelov/</url>
@@ -92,7 +92,7 @@
     </build>
 
     <properties>
-        <jira.version>5.2.8</jira.version>
+        <jira.version>5.0</jira.version>
         <amps.version>4.1.6</amps.version>
         <useFastdevCli>false</useFastdevCli>
     </properties>

@@ -12,7 +12,6 @@ import com.atlassian.jira.JiraDataTypes;
 import com.atlassian.jira.bc.issue.search.QueryContextConverter;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.customfields.CustomFieldSearcher;
-import com.atlassian.jira.issue.customfields.NaturallyOrderedCustomFieldSearcher;
 import com.atlassian.jira.issue.customfields.searchers.AbstractInitializationCustomFieldSearcher;
 import com.atlassian.jira.issue.customfields.searchers.CustomFieldSearcherClauseHandler;
 import com.atlassian.jira.issue.customfields.searchers.SimpleCustomFieldSearcherClauseHandler;
@@ -41,7 +40,7 @@ import com.atlassian.util.concurrent.atomic.AtomicReference;
 @PublicSpi
 @PublicApi
 public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearcher
-        implements CustomFieldSearcher, NaturallyOrderedCustomFieldSearcher
+        implements CustomFieldSearcher
 {
     private final FieldVisibilityManager fieldVisibilityManager;
     private final JqlOperandResolver jqlOperandResolver;
@@ -98,23 +97,19 @@ public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearch
         return searchInputTransformer;
     }
 
-    public SearchRenderer getSearchRenderer()
-    {
-        if (searchRenderer == null)
-        {
+    public SearchRenderer getSearchRenderer() {
+        if (searchRenderer == null) {
             throw new IllegalStateException("Attempt to retrieve searchRenderer off uninitialised custom field searcher.");
         }
         return searchRenderer;
     }
 
-    public LuceneFieldSorter getSorter(CustomField customField)
-    {
+    public LuceneFieldSorter getSorter(CustomField customField) {
         return new TextFieldSorter(customField.getId());
     }
 
-    public String getSortField(CustomField customField)
-    {
-        return DocumentConstants.LUCENE_SORTFIELD_PREFIX + customField.getId();
+    public String getSortField(CustomField customField) {
+        return customField.getId();
     }
 
     /**

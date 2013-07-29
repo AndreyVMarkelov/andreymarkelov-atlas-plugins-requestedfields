@@ -52,7 +52,7 @@ public class JsonRequestMultiCustomField extends TextCFType {
     @Override
     public List<FieldConfigItemType> getConfigurationItemTypes() {
         final List<FieldConfigItemType> configurationItemTypes = super.getConfigurationItemTypes();
-        configurationItemTypes.add(new SimpleHttpConfig(renderer, pluginData, true));
+        configurationItemTypes.add(new SimpleHttpConfig(renderer, pluginData, false));
         return configurationItemTypes;
     }
 
