@@ -2,7 +2,9 @@ package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 
 import static com.atlassian.jira.util.dbc.Assertions.notNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import com.atlassian.annotations.PublicApi;
@@ -18,7 +20,8 @@ import com.atlassian.jira.issue.customfields.searchers.SimpleCustomFieldSearcher
 import com.atlassian.jira.issue.customfields.searchers.information.CustomFieldSearcherInformation;
 import com.atlassian.jira.issue.customfields.searchers.transformer.CustomFieldInputHelper;
 import com.atlassian.jira.issue.fields.CustomField;
-import com.atlassian.jira.issue.index.DocumentConstants;
+import com.atlassian.jira.issue.fields.config.FieldConfig;
+import com.atlassian.jira.issue.fields.config.FieldConfigScheme;
 import com.atlassian.jira.issue.index.indexers.FieldIndexer;
 import com.atlassian.jira.issue.search.ClauseNames;
 import com.atlassian.jira.issue.search.LuceneFieldSorter;
@@ -51,23 +54,28 @@ public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearch
     private volatile SearchRenderer searchRenderer;
     private volatile CustomFieldSearcherClauseHandler customFieldSearcherClauseHandler;
 
-    /**
-     * Old Constructor - deprecated.
-     * @param jqlOperandResolver
-     * @param customFieldInputHelper
-     *
-     * @deprecated Use {@link #ExactTextSearcher(JqlOperandResolver, CustomFieldInputHelper, FieldVisibilityManager)} instead. Since v4.4.
-     */
-    public SimpleListSearcher(final JqlOperandResolver jqlOperandResolver, final CustomFieldInputHelper customFieldInputHelper)
-    {
+    public SimpleListSearcher(
+            final JqlOperandResolver jqlOperandResolver,
+            final CustomFieldInputHelper customFieldInputHelper) {
         this(jqlOperandResolver, customFieldInputHelper, ComponentAccessor.getComponent(FieldVisibilityManager.class));
     }
 
-    public SimpleListSearcher(JqlOperandResolver jqlOperandResolver, CustomFieldInputHelper customFieldInputHelper, FieldVisibilityManager fieldVisibilityManager)
+    public SimpleListSearcher(
+            JqlOperandResolver jqlOperandResolver,
+            CustomFieldInputHelper customFieldInputHelper,
+            FieldVisibilityManager fieldVisibilityManager)
     {
         this.fieldVisibilityManager = fieldVisibilityManager;
         this.jqlOperandResolver = jqlOperandResolver;
         this.customFieldInputHelper = notNull("customFieldInputHelper", customFieldInputHelper);
+    }
+
+    private List<FieldConfig> getConfigs(CustomField field) {
+        List<FieldConfig> configs = new ArrayList<FieldConfig>();
+        for (FieldConfigScheme cs : field.getConfigurationSchemes()) {
+            configs.addAll(cs.getConfigs().values());
+        }
+        return configs;
     }
 
     public CustomFieldSearcherClauseHandler getCustomFieldSearcherClauseHandler()
@@ -124,6 +132,8 @@ public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearch
         JqlSelectOptionsUtil jqlSelectOptionsUtil = ComponentManager.getComponentInstanceOfType(JqlSelectOptionsUtil.class);
         QueryContextConverter queryContextConverter = new QueryContextConverter();
 
+        boolean isXmlField = field.getCustomFieldType().getKey().equals("ru.andreymarkelov.atlas.plugins.requestedfields:xml-multi-request-custom-field");
+
         searcherInformation = new CustomFieldSearcherInformation(
                 field.getId(),
                 field.getNameKey(),
@@ -141,7 +151,7 @@ public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearch
                 names,
                 getDescriptor(),
                 field,
-                new SelectTextCustomFieldValueProvider(),
+                new SelectTextCustomFieldValueProvider(getConfigs(field), isXmlField),
                 fieldVisibilityManager);
         final Set<Operator> supportedOperators = OperatorClasses.EQUALITY_OPERATORS_WITH_EMPTY;
         this.customFieldSearcherClauseHandler = new SimpleCustomFieldSearcherClauseHandler(

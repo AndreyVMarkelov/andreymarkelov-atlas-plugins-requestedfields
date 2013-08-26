@@ -1,6 +1,9 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
+
 import com.atlassian.jira.ComponentManager;
 import com.atlassian.jira.bc.issue.search.QueryContextConverter;
 import com.atlassian.jira.issue.customfields.searchers.ExactTextSearcher;
@@ -8,6 +11,8 @@ import com.atlassian.jira.issue.customfields.searchers.transformer.CustomFieldIn
 import com.atlassian.jira.issue.customfields.statistics.AbstractCustomFieldStatisticsMapper;
 import com.atlassian.jira.issue.customfields.statistics.CustomFieldStattable;
 import com.atlassian.jira.issue.fields.CustomField;
+import com.atlassian.jira.issue.fields.config.FieldConfig;
+import com.atlassian.jira.issue.fields.config.FieldConfigScheme;
 import com.atlassian.jira.issue.search.ClauseNames;
 import com.atlassian.jira.issue.search.LuceneFieldSorter;
 import com.atlassian.jira.issue.search.searchers.renderer.SearchRenderer;
@@ -49,6 +54,14 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
         super(jqlOperandResolver, customFieldInputHelper);
         this.jqlOperandResolver = jqlOperandResolver;
         this.customFieldInputHelper = customFieldInputHelper;
+    }
+
+    private List<FieldConfig> getConfigs(CustomField field) {
+        List<FieldConfig> configs = new ArrayList<FieldConfig>();
+        for (FieldConfigScheme cs : field.getConfigurationSchemes()) {
+            configs.addAll(cs.getConfigs().values());
+        }
+        return configs;
     }
 
     @Override
@@ -119,6 +132,8 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
         QueryContextConverter queryContextConverter = new QueryContextConverter();
         FieldVisibilityManager fieldVisibilityManager = ComponentManager.getComponentInstanceOfType(FieldVisibilityManager.class);
 
+        boolean isXmlField = field.getCustomFieldType().getKey().equals("ru.andreymarkelov.atlas.plugins.requestedfields:xml-request-custom-field");
+
         searchInputTransformer = new SelectTextCustomFieldSearchInputTransformer(
             customField.getId(),
             clauseNames,
@@ -132,7 +147,7 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
             clauseNames,
             getDescriptor(),
             customField,
-            new SelectTextCustomFieldValueProvider(),
+            new SelectTextCustomFieldValueProvider(getConfigs(field), isXmlField),
             fieldVisibilityManager);
 
         super.init(field);

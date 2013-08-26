@@ -1,8 +1,12 @@
 $!{auiparams.put("controlHeaderClass", "aui-field-text")}
 #searcherEditHeader (${customField.id} ${customField.name})
+    #if($value.size() > 0)
     <select class="select" id="searcher-$customField.id" name="$customField.id">
         <option></option>
-        #foreach($val in $vals)<option value="$val">$val</option>#end
+        #foreach($val in $value)<option value="$val">$val</option>#end
     </select>
+    #else
+    <input class="text" id="searcher-$customField.id" name="$customField.id"/>
+    #end
 #searcherEditFooter (${customField.id} ${customField.description})
 $!{auiparams.clear()}
