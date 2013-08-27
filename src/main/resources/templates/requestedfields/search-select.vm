@@ -1,3 +1,4 @@
+##disable_html_escaping() TODO REENABLE
 $!{auiparams.put("controlHeaderClass", "aui-field-text")}
 #searcherEditHeader (${customField.id} ${customField.name})
     #if($value.size() > 0)

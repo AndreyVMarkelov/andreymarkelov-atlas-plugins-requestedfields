@@ -1,1 +1,6 @@
-#if($value)$!value#end
+##disable_html_escaping() TODO REENABLE
+#searcherHeader ($customField)
+#if ($valueObject)
+    $cfValueEncoder.encodeForHtml($!valueObject.toString())
+#end
+#searcherFooter ($customField)
