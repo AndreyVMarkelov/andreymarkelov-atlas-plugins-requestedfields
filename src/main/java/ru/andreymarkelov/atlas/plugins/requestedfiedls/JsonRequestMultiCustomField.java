@@ -1,12 +1,8 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.customfields.impl.TextCFType;
@@ -19,13 +15,9 @@ import com.atlassian.jira.issue.fields.layout.field.FieldLayoutItem;
 import com.atlassian.jira.util.json.JSONArray;
 import com.atlassian.jira.util.json.JSONException;
 import com.atlassian.templaterenderer.TemplateRenderer;
-import com.nebhale.jsonpath.JsonPath;
 
 public class JsonRequestMultiCustomField extends TextCFType {
-    private static final Logger log = LoggerFactory.getLogger(JsonRequestMultiCustomField.class);
-
     private final PluginData pluginData;
-
     private final TemplateRenderer renderer;
 
     public JsonRequestMultiCustomField(
@@ -68,33 +60,11 @@ public class JsonRequestMultiCustomField extends TextCFType {
         }
 
         map.put("list", parseData(field.getValue(issue)));
-
         FieldConfig fieldConfig = field.getRelevantConfig(issue);
         JSONFieldData data = pluginData.getJSONFieldData(fieldConfig);
         if (data != null) {
-            try {
-                //--> http request
-                HttpSender httpService = new HttpSender(data.getUrl(), data.getReqType(), data.getReqDataType(), data.getUser(), data.getPassword());
-                String json = httpService.call(data.getReqData());
-                JsonPath namePath = JsonPath.compile(data.getReqPath());
-                List<String> vals = namePath.read(json, List.class);
-                //<-- http request
-                Object defaultValue = field.getDefaultValue(issue);
-                if (defaultValue != null) {
-                    vals.add(0, defaultValue.toString());
-                }
-
-                map.put("json", json);
-                if (vals != null) {
-                    if (!vals.isEmpty()) {
-                        Collections.sort(vals);
-                    }
-                    map.put("vals", vals);
-                }
-            } catch (Throwable th) {
-                log.error("JsonRequestMultiCustomField::getVelocityParameters - error renderring", th);
-                map.put("error", th.getMessage());
-            }
+            JsonHttpRunner runner = new JsonHttpRunner(data, field.getDefaultValue(issue));
+            map.put("runner", runner);
         } else {
             map.put("notconfigured", Boolean.TRUE);
         }

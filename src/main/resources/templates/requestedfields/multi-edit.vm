@@ -4,32 +4,37 @@
 #else
     #if($notconfigured)
         <div class="formErrors">$i18n.getText("requestedfields.settings.error")</div>
-    #elseif($error)
-        <div class="formErrors">$textutils.htmlEncode($!error)</div>
     #else
-        <input id="${customField.id}" name="${customField.id}" type="hidden" #if($value)value="$value"#elsevalue="[]"#end/>
-        <select class="select" multiple="multiple" name="${customField.id}-sel" id="${customField.id}-sel">
-            #foreach($val in $vals)<option #if($list.contains($val))selected="selected"#end value="$val">$val</option>#end
-        </select>
-        <script language="javascript">
-            jQuery(document).ready(function() {
-                multixmlupdate();
-                JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function(e, context, reason) {
+        #set($data = $runner.getData())
+        #set($error = $data.getError())
+        #set($vals = $data.getVals())
+        #if($error)
+            <div class="formErrors">$textutils.htmlEncode($!error)</div>
+        #else
+            <input id="${customField.id}" name="${customField.id}" type="hidden" #if($value)value="$value"#elsevalue="[]"#end/>
+            <select class="select" multiple="multiple" name="${customField.id}-sel" id="${customField.id}-sel">
+                #foreach($val in $vals)<option #if($list.contains($val))selected="selected"#end value="$val">$val</option>#end
+            </select>
+            <script language="javascript">
+                jQuery(document).ready(function() {
                     multixmlupdate();
-                });
-            });
-
-            function multixmlupdate() {
-                jQuery("#${customField.id}-sel").change(function() {
-                    var data = jQuery(this).val();
-                    var arrdata = new Array();
-                    jQuery.each(data, function(index, value) {
-                        arrdata.push(value);
+                    JIRA.bind(JIRA.Events.NEW_CONTENT_ADDED, function(e, context, reason) {
+                        multixmlupdate();
                     });
-                    jQuery("#${customField.id}").val(JSON.stringify(arrdata));
                 });
-            }
-        </script>
+
+                function multixmlupdate() {
+                    jQuery("#${customField.id}-sel").change(function() {
+                        var data = jQuery(this).val();
+                        var arrdata = new Array();
+                        jQuery.each(data, function(index, value) {
+                            arrdata.push(value);
+                        });
+                        jQuery("#${customField.id}").val(JSON.stringify(arrdata));
+                    });
+                }
+            </script>
+        #end
     #end
 #end
 #controlFooter ($action $fieldLayoutItem.fieldDescription $displayParameters.noHeader)

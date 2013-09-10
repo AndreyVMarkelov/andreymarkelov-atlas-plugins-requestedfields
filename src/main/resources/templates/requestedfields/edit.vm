@@ -4,12 +4,17 @@
 #else
     #if($notconfigured)
         <div class="formErrors">$i18n.getText("requestedfields.settings.error")</div>
-    #elseif($error)
-        <div class="formErrors">$textutils.htmlEncode($!error)</div>
     #else
-        <select class="select" name="$customField.id" id="$customField.id">
-            #foreach($val in $vals)<option #if($value && $value == $val)selected="selected"#end value="$val">$val</option>#end
-        </select>
+        #set($data = $runner.getData())
+        #set($error = $data.getError())
+        #set($vals = $data.getVals())
+        #if($error)
+            <div class="formErrors">$textutils.htmlEncode($!error)</div>
+        #else
+            <select class="select" name="$customField.id" id="$customField.id">
+                #foreach($val in $vals)<option #if($value && $value == $val)selected="selected"#end value="$val">$val</option>#end
+            </select>
+        #end
     #end
 #end
 #controlFooter ($action $fieldLayoutItem.fieldDescription $displayParameters.noHeader)
