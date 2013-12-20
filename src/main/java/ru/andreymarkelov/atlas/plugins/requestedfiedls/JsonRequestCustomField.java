@@ -34,10 +34,7 @@ public class JsonRequestCustomField extends TextCFType {
     }
 
     @Override
-    public Map<String, Object> getVelocityParameters(
-            final Issue issue,
-            final CustomField field,
-            final FieldLayoutItem fieldLayoutItem) {
+    public Map<String, Object> getVelocityParameters(final Issue issue, final CustomField field, final FieldLayoutItem fieldLayoutItem) {
         final Map<String, Object> map = super.getVelocityParameters(issue, field, fieldLayoutItem);
 
         if (issue == null) {
@@ -45,12 +42,14 @@ public class JsonRequestCustomField extends TextCFType {
         }
 
         FieldConfig fieldConfig = field.getRelevantConfig(issue);
-        JSONFieldData data = pluginData.getJSONFieldData(fieldConfig);
-        if (data != null) {
-            JsonHttpRunner runner = new JsonHttpRunner(data, field.getDefaultValue(issue));
-            map.put("runner", runner);
-        } else {
-            map.put("notconfigured", Boolean.TRUE);
+        if (fieldConfig != null) {
+            JSONFieldData data = pluginData.getJSONFieldData(fieldConfig);
+            if (data != null) {
+                JsonHttpRunner runner = new JsonHttpRunner(data, field.getDefaultValue(issue));
+                map.put("runner", runner);
+            } else {
+                map.put("notconfigured", Boolean.TRUE);
+            }
         }
 
         return map;

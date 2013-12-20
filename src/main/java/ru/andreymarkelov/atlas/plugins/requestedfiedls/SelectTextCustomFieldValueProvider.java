@@ -26,11 +26,6 @@ import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.atlassian.jira.issue.transport.FieldValuesHolder;
 import com.nebhale.jsonpath.JsonPath;
 
-/**
- * Custom field value provider.
- * 
- * @author Andrey Markelov
- */
 public class SelectTextCustomFieldValueProvider implements CustomFieldValueProvider {
     private List<FieldConfig> configs;
     private PluginData pluginData;

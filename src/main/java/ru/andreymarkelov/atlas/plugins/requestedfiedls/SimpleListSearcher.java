@@ -9,9 +9,7 @@ import java.util.Set;
 
 import com.atlassian.annotations.PublicApi;
 import com.atlassian.annotations.PublicSpi;
-import com.atlassian.jira.ComponentManager;
 import com.atlassian.jira.JiraDataTypes;
-import com.atlassian.jira.bc.issue.search.QueryContextConverter;
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.customfields.CustomFieldSearcher;
 import com.atlassian.jira.issue.customfields.searchers.AbstractInitializationCustomFieldSearcher;
@@ -19,6 +17,7 @@ import com.atlassian.jira.issue.customfields.searchers.CustomFieldSearcherClause
 import com.atlassian.jira.issue.customfields.searchers.SimpleCustomFieldSearcherClauseHandler;
 import com.atlassian.jira.issue.customfields.searchers.information.CustomFieldSearcherInformation;
 import com.atlassian.jira.issue.customfields.searchers.transformer.CustomFieldInputHelper;
+import com.atlassian.jira.issue.customfields.searchers.transformer.FreeTextCustomFieldSearchInputTransformer;
 import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.atlassian.jira.issue.fields.config.FieldConfigScheme;
@@ -33,7 +32,6 @@ import com.atlassian.jira.jql.operand.JqlOperandResolver;
 import com.atlassian.jira.jql.operator.OperatorClasses;
 import com.atlassian.jira.jql.query.ActualValueCustomFieldClauseQueryFactory;
 import com.atlassian.jira.jql.util.IndexValueConverter;
-import com.atlassian.jira.jql.util.JqlSelectOptionsUtil;
 import com.atlassian.jira.jql.util.SimpleIndexValueConverter;
 import com.atlassian.jira.jql.validator.ExactTextCustomFieldValidator;
 import com.atlassian.jira.web.FieldVisibilityManager;
@@ -42,9 +40,7 @@ import com.atlassian.util.concurrent.atomic.AtomicReference;
 
 @PublicSpi
 @PublicApi
-public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearcher
-        implements CustomFieldSearcher
-{
+public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearcher implements CustomFieldSearcher {
     private final FieldVisibilityManager fieldVisibilityManager;
     private final JqlOperandResolver jqlOperandResolver;
     private final CustomFieldInputHelper customFieldInputHelper;
@@ -54,17 +50,11 @@ public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearch
     private volatile SearchRenderer searchRenderer;
     private volatile CustomFieldSearcherClauseHandler customFieldSearcherClauseHandler;
 
-    public SimpleListSearcher(
-            final JqlOperandResolver jqlOperandResolver,
-            final CustomFieldInputHelper customFieldInputHelper) {
+    public SimpleListSearcher(final JqlOperandResolver jqlOperandResolver, final CustomFieldInputHelper customFieldInputHelper) {
         this(jqlOperandResolver, customFieldInputHelper, ComponentAccessor.getComponent(FieldVisibilityManager.class));
     }
 
-    public SimpleListSearcher(
-            JqlOperandResolver jqlOperandResolver,
-            CustomFieldInputHelper customFieldInputHelper,
-            FieldVisibilityManager fieldVisibilityManager)
-    {
+    public SimpleListSearcher(JqlOperandResolver jqlOperandResolver, CustomFieldInputHelper customFieldInputHelper, FieldVisibilityManager fieldVisibilityManager) {
         this.fieldVisibilityManager = fieldVisibilityManager;
         this.jqlOperandResolver = jqlOperandResolver;
         this.customFieldInputHelper = notNull("customFieldInputHelper", customFieldInputHelper);
@@ -78,28 +68,22 @@ public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearch
         return configs;
     }
 
-    public CustomFieldSearcherClauseHandler getCustomFieldSearcherClauseHandler()
-    {
-        if (customFieldSearcherClauseHandler == null)
-        {
+    public CustomFieldSearcherClauseHandler getCustomFieldSearcherClauseHandler() {
+        if (customFieldSearcherClauseHandler == null) {
             throw new IllegalStateException("Attempt to retrieve customFieldSearcherClauseHandler off uninitialised custom field searcher.");
         }
         return customFieldSearcherClauseHandler;
     }
 
-    public SearcherInformation<CustomField> getSearchInformation()
-    {
-        if (searcherInformation == null)
-        {
+    public SearcherInformation<CustomField> getSearchInformation() {
+        if (searcherInformation == null) {
             throw new IllegalStateException("Attempt to retrieve SearcherInformation off uninitialised custom field searcher.");
         }
         return searcherInformation;
     }
 
-    public SearchInputTransformer getSearchInputTransformer()
-    {
-        if (searchInputTransformer == null)
-        {
+    public SearchInputTransformer getSearchInputTransformer() {
+        if (searchInputTransformer == null) {
             throw new IllegalStateException("Attempt to retrieve searchInputTransformer off uninitialised custom field searcher.");
         }
         return searchInputTransformer;
@@ -120,17 +104,11 @@ public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearch
         return customField.getId();
     }
 
-    /**
-     * This is the first time the searcher knows what its ID and names are
-     *
-     * @param field the Custom Field for this searcher
-     */
     public void init(CustomField field) {
         final ClauseNames names = field.getClauseNames();
         final FieldIndexer indexer = new SimpleListIndexer(fieldVisibilityManager, field);
         final IndexValueConverter indexValueConverter = new SimpleIndexValueConverter(false);
-        JqlSelectOptionsUtil jqlSelectOptionsUtil = ComponentManager.getComponentInstanceOfType(JqlSelectOptionsUtil.class);
-        QueryContextConverter queryContextConverter = new QueryContextConverter();
+        final Set<Operator> supportedOperators = OperatorClasses.EQUALITY_OPERATORS_WITH_EMPTY;
 
         boolean isXmlField = field.getCustomFieldType().getKey().equals("ru.andreymarkelov.atlas.plugins.requestedfields:xml-multi-request-custom-field");
 
@@ -139,13 +117,10 @@ public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearch
                 field.getNameKey(),
                 Collections.<FieldIndexer>singletonList(indexer),
                 new AtomicReference<CustomField>(field));
-        searchInputTransformer = new SelectTextCustomFieldSearchInputTransformer(
-                field.getId(),
-                names,
+        searchInputTransformer = new FreeTextCustomFieldSearchInputTransformer(
                 field,
-                jqlOperandResolver,
-                jqlSelectOptionsUtil,
-                queryContextConverter,
+                names,
+                searcherInformation.getId(),
                 customFieldInputHelper);
         searchRenderer = new SelectTextCustomFieldRenderer(
                 names,
@@ -153,8 +128,7 @@ public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearch
                 field,
                 new SelectTextCustomFieldValueProvider(getConfigs(field), isXmlField),
                 fieldVisibilityManager);
-        final Set<Operator> supportedOperators = OperatorClasses.EQUALITY_OPERATORS_WITH_EMPTY;
-        this.customFieldSearcherClauseHandler = new SimpleCustomFieldSearcherClauseHandler(
+        customFieldSearcherClauseHandler = new SimpleCustomFieldSearcherClauseHandler(
                 new ExactTextCustomFieldValidator(),
                 new ActualValueCustomFieldClauseQueryFactory(field.getId(), jqlOperandResolver, indexValueConverter, false),
                 supportedOperators,

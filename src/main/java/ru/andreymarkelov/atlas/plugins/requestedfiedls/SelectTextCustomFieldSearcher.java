@@ -1,18 +1,21 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import com.atlassian.jira.ComponentManager;
-import com.atlassian.jira.bc.issue.search.QueryContextConverter;
 import com.atlassian.jira.issue.customfields.searchers.ExactTextSearcher;
+import com.atlassian.jira.issue.customfields.searchers.information.CustomFieldSearcherInformation;
 import com.atlassian.jira.issue.customfields.searchers.transformer.CustomFieldInputHelper;
+import com.atlassian.jira.issue.customfields.searchers.transformer.FreeTextCustomFieldSearchInputTransformer;
 import com.atlassian.jira.issue.customfields.statistics.AbstractCustomFieldStatisticsMapper;
 import com.atlassian.jira.issue.customfields.statistics.CustomFieldStattable;
 import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.atlassian.jira.issue.fields.config.FieldConfigScheme;
+import com.atlassian.jira.issue.index.indexers.FieldIndexer;
 import com.atlassian.jira.issue.search.ClauseNames;
 import com.atlassian.jira.issue.search.LuceneFieldSorter;
 import com.atlassian.jira.issue.search.searchers.renderer.SearchRenderer;
@@ -20,14 +23,9 @@ import com.atlassian.jira.issue.search.searchers.transformer.SearchInputTransfor
 import com.atlassian.jira.issue.statistics.StatisticsMapper;
 import com.atlassian.jira.issue.statistics.TextFieldSorter;
 import com.atlassian.jira.jql.operand.JqlOperandResolver;
-import com.atlassian.jira.jql.util.JqlSelectOptionsUtil;
 import com.atlassian.jira.web.FieldVisibilityManager;
+import com.atlassian.util.concurrent.atomic.AtomicReference;
 
-/**
- * Searcher.
- * 
- * @author Andrey Markelov
- */
 public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements CustomFieldStattable {
     private static class SortStringComparator implements Comparator<String> {
         public int compare(String s, String s1) {
@@ -39,21 +37,21 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
 
     private CustomFieldInputHelper customFieldInputHelper;
 
-    private JqlOperandResolver jqlOperandResolver;
+    private final FieldVisibilityManager fieldVisibilityManager;
 
     private SearchInputTransformer searchInputTransformer;
 
     private SearchRenderer searchRenderer;
 
-    /**
-     * Constructor.
-     */
+    private volatile CustomFieldSearcherInformation searcherInformation;
+
     public SelectTextCustomFieldSearcher(
             JqlOperandResolver jqlOperandResolver,
-            CustomFieldInputHelper customFieldInputHelper) {
+            CustomFieldInputHelper customFieldInputHelper,
+            FieldVisibilityManager fieldVisibilityManager) {
         super(jqlOperandResolver, customFieldInputHelper);
-        this.jqlOperandResolver = jqlOperandResolver;
         this.customFieldInputHelper = customFieldInputHelper;
+        this.fieldVisibilityManager = fieldVisibilityManager;
     }
 
     private List<FieldConfig> getConfigs(CustomField field) {
@@ -89,8 +87,7 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
             @Override
             public Comparator getComparator() {
                 return new Comparator() {
-                    public int compare(Object o1, Object o2)
-                    {
+                    public int compare(Object o1, Object o2) {
                         if (o1 == null && o2 == null) {
                             return 0;
                         } else if (o1 == null) {
@@ -128,21 +125,21 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
         customField = field;
 
         ClauseNames clauseNames = customField.getClauseNames();
-        JqlSelectOptionsUtil jqlSelectOptionsUtil = ComponentManager.getComponentInstanceOfType(JqlSelectOptionsUtil.class);
-        QueryContextConverter queryContextConverter = new QueryContextConverter();
+        final FieldIndexer indexer = new SimpleListIndexer(fieldVisibilityManager, field);
         FieldVisibilityManager fieldVisibilityManager = ComponentManager.getComponentInstanceOfType(FieldVisibilityManager.class);
 
         boolean isXmlField = field.getCustomFieldType().getKey().equals("ru.andreymarkelov.atlas.plugins.requestedfields:xml-request-custom-field");
 
-        searchInputTransformer = new SelectTextCustomFieldSearchInputTransformer(
-            customField.getId(),
-            clauseNames,
-            field,
-            jqlOperandResolver,
-            jqlSelectOptionsUtil,
-            queryContextConverter,
-            customFieldInputHelper);
-
+        searcherInformation = new CustomFieldSearcherInformation(
+                field.getId(),
+                field.getNameKey(),
+                Collections.<FieldIndexer>singletonList(indexer),
+                new AtomicReference<CustomField>(field));
+        searchInputTransformer = new FreeTextCustomFieldSearchInputTransformer(
+                field,
+                clauseNames,
+                searcherInformation.getId(),
+                customFieldInputHelper);
         searchRenderer = new SelectTextCustomFieldRenderer(
             clauseNames,
             getDescriptor(),
