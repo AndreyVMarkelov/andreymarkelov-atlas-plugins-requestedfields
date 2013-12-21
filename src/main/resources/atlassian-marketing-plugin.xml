@@ -1,0 +1,21 @@
+<atlassian-plugin-marketing>
+    <compatibility>
+        <product name="jira" min="4.0" max="4.4.1"/>
+        <product name="bamboo" min="3.0" max="3.1"/>
+    </compatibility>
+
+    <logo image="images/01_logo.jpg"/>
+    <banner image="images/02_banner.jpg"/>
+
+    <highlights>
+        <highlight image="images/03_highlight1_ss.jpg" cropped="images/04_highlight1_cropped.jpg"/>
+        <highlight image="images/05_highlight2_ss.jpg" cropped="images/06_highlight2_cropped.jpg"/>
+        <highlight image="images/07_highlight3_ss.jpg" cropped="images/08_highlight3_cropped.jpg"/>
+    </highlights>
+
+    <screenshots>
+        <screenshot image="images/09_addl_ss1.jpg"/>
+        <screenshot image="images/10_addl_ss2.jpg"/>
+        <screenshot image="images/11_addl_ss3.jpg"/>
+    </screenshots>
+</atlassian-plugin-marketing>

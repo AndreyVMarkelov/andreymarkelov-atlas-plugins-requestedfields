@@ -61,12 +61,14 @@ public class XmlRequestMultiCustomField extends TextCFType {
         map.put("list", parseData(field.getValue(issue)));
 
         FieldConfig fieldConfig = field.getRelevantConfig(issue);
-        JSONFieldData data = pluginData.getJSONFieldData(fieldConfig);
-        if (data != null) {
-            XmlHttpRunner runner = new XmlHttpRunner(data, field.getDefaultValue(issue));
-            map.put("runner", runner);
-        } else {
-            map.put("notconfigured", Boolean.TRUE);
+        if (fieldConfig != null) {
+            JSONFieldData data = pluginData.getJSONFieldData(fieldConfig);
+            if (data != null) {
+                XmlHttpRunner runner = new XmlHttpRunner(data, field.getDefaultValue(issue));
+                map.put("runner", runner);
+            } else {
+                map.put("notconfigured", Boolean.TRUE);
+            }
         }
 
         return map;
