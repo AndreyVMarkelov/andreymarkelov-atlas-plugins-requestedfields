@@ -1,39 +1,31 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 
-//import com.atlassian.jira.config.managedconfiguration.ManagedConfigurationItemService;
+import com.atlassian.jira.config.managedconfiguration.ManagedConfigurationItemService;
 import com.atlassian.jira.security.Permissions;
 import com.atlassian.jira.web.action.admin.customfields.AbstractEditConfigurationItemAction;
 
 public class EditConfiguration extends AbstractEditConfigurationItemAction {
-    /**
-     * Unique ID.
-     */
     private static final long serialVersionUID = -4644319955468389371L;
 
     private final PluginData pluginData;
 
     private String url;
-
     private String user;
-
     private String password;
-
     private String reqType;
-
     private String reqData;
-
     private String reqPath;
 
-    /*
     public EditConfiguration(ManagedConfigurationItemService managedConfigurationItemService, PluginData pluginData) {
         super(managedConfigurationItemService);
         this.pluginData = pluginData;
     }
-    */
 
+    /*
     public EditConfiguration(PluginData pluginData) {
         this.pluginData = pluginData;
     }
+    */
 
     @Override
     public String doDefault() throws Exception {
