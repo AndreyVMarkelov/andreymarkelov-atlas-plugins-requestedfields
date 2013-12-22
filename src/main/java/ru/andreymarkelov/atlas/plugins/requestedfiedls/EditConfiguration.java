@@ -1,6 +1,6 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 
-import com.atlassian.jira.config.managedconfiguration.ManagedConfigurationItemService;
+//import com.atlassian.jira.config.managedconfiguration.ManagedConfigurationItemService;
 import com.atlassian.jira.security.Permissions;
 import com.atlassian.jira.web.action.admin.customfields.AbstractEditConfigurationItemAction;
 
@@ -16,16 +16,16 @@ public class EditConfiguration extends AbstractEditConfigurationItemAction {
     private String reqData;
     private String reqPath;
 
+    /*
     public EditConfiguration(ManagedConfigurationItemService managedConfigurationItemService, PluginData pluginData) {
         super(managedConfigurationItemService);
         this.pluginData = pluginData;
     }
+    */
 
-    /*
     public EditConfiguration(PluginData pluginData) {
         this.pluginData = pluginData;
     }
-    */
 
     @Override
     public String doDefault() throws Exception {

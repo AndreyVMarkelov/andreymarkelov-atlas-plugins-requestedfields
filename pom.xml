@@ -14,7 +14,7 @@
     <packaging>atlassian-plugin</packaging>
 
     <dependencies>
-        <!--<dependency>
+        <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-api</artifactId>
             <version>${jira.version}</version>
@@ -25,13 +25,13 @@
             <artifactId>jira-core</artifactId>
             <version>${jira.version}</version>
             <scope>provided</scope>
-        </dependency>-->
-        <dependency>
+        </dependency>
+        <!--<dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-core</artifactId>
             <version>${jira.version}</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>junit</groupId>
@@ -100,8 +100,8 @@
     </build>
 
     <properties>
-        <!--<jira.version>5.1.8</jira.version>-->
-        <jira.version>6.1-OD-07</jira.version>
+        <jira.version>5.1.8</jira.version>
+        <!--<jira.version>6.1-OD-07</jira.version>-->
         <amps.version>4.1.6</amps.version>
         <useFastdevCli>false</useFastdevCli>
     </properties>

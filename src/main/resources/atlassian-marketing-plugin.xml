@@ -1,7 +1,7 @@
 <atlassian-plugin-marketing>
     <compatibility>
-        <product name="jira" min="5.2-rc1" max="6.0.8"/>
-        <!--<product name="jira" min="5.0" max="5.1.8"/>-->
+        <!--<product name="jira" min="5.2-rc1" max="6.0.8"/>-->
+        <product name="jira" min="5.0" max="5.1.8"/>
     </compatibility>
     <logo image="images/http.png"/>
     <banner image="images/banner.jpg"/>
@@ -10,4 +10,8 @@
         <highlight image="images/v66.png" cropped="images/v66.png"/>
         <highlight image="images/v77.png" cropped="images/v77.png"/>
     </highlights>
+    <screenshots>
+        <screenshot image="images/v00.png"/>
+        <screenshot image="images/v66.png"/>
+    </screenshots>
 </atlassian-plugin-marketing>
