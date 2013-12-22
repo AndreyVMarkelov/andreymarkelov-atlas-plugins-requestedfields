@@ -1,4 +1,4 @@
 andreymarkelov-atlas-plugins-requestedfields
 ============================================
 
-HTTP requested fields
+HTTP Feed Custom Fields

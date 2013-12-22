@@ -7,9 +7,9 @@
         <vendor name="${project.organization.name}" url="${project.organization.url}"/>
         <param name="plugin-icon">images/http.png</param>
         <param name="plugin-logo">images/http.png</param>
-        <param name="plugin-banner">images/pluginBanner.jpg</param>
-        <param name="vendor-icon">images/logo.png</param>
-        <param name="vendor-logo">images/logo.png</param>
+        <param name="plugin-banner">images/banner.jpg</param>
+        <param name="vendor-icon">images/144.jpg</param>
+        <param name="vendor-logo">images/32.jpg</param>
     </plugin-info>
 
     <!-- add our i18n resource -->

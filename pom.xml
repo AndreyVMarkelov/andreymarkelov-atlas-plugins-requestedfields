@@ -9,8 +9,8 @@
         <name>Andrey Markelov</name>
         <url>http://ru.linkedin.com/in/andreymarkelov/</url>
     </organization>
-    <name>HTTP filled custom fields</name>
-    <description>This is the ru.andreymarkelov.atlas.plugins:requestedfields plugin for Atlassian JIRA.</description>
+    <name>HTTP Feed Custom Fields</name>
+    <description>Feed select list options using HTTP via JSON or XML</description>
     <packaging>atlassian-plugin</packaging>
 
     <dependencies>
