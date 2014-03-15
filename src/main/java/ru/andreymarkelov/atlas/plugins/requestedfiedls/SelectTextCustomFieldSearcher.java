@@ -9,7 +9,7 @@ import com.atlassian.jira.ComponentManager;
 import com.atlassian.jira.issue.customfields.searchers.ExactTextSearcher;
 import com.atlassian.jira.issue.customfields.searchers.information.CustomFieldSearcherInformation;
 import com.atlassian.jira.issue.customfields.searchers.transformer.CustomFieldInputHelper;
-import com.atlassian.jira.issue.customfields.searchers.transformer.FreeTextCustomFieldSearchInputTransformer;
+import com.atlassian.jira.issue.customfields.searchers.transformer.ExactTextCustomFieldSearchInputTransformer;
 import com.atlassian.jira.issue.customfields.statistics.AbstractCustomFieldStatisticsMapper;
 import com.atlassian.jira.issue.customfields.statistics.CustomFieldStattable;
 import com.atlassian.jira.issue.fields.CustomField;
@@ -135,7 +135,7 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
                 field.getNameKey(),
                 Collections.<FieldIndexer>singletonList(indexer),
                 new AtomicReference<CustomField>(field));
-        searchInputTransformer = new FreeTextCustomFieldSearchInputTransformer(
+        searchInputTransformer = new ExactTextCustomFieldSearchInputTransformer(
                 field,
                 clauseNames,
                 searcherInformation.getId(),

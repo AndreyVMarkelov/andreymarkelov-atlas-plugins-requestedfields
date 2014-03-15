@@ -17,7 +17,7 @@ import com.atlassian.jira.issue.customfields.searchers.CustomFieldSearcherClause
 import com.atlassian.jira.issue.customfields.searchers.SimpleCustomFieldSearcherClauseHandler;
 import com.atlassian.jira.issue.customfields.searchers.information.CustomFieldSearcherInformation;
 import com.atlassian.jira.issue.customfields.searchers.transformer.CustomFieldInputHelper;
-import com.atlassian.jira.issue.customfields.searchers.transformer.FreeTextCustomFieldSearchInputTransformer;
+import com.atlassian.jira.issue.customfields.searchers.transformer.ExactTextCustomFieldSearchInputTransformer;
 import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.atlassian.jira.issue.fields.config.FieldConfigScheme;
@@ -117,7 +117,7 @@ public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearch
                 field.getNameKey(),
                 Collections.<FieldIndexer>singletonList(indexer),
                 new AtomicReference<CustomField>(field));
-        searchInputTransformer = new FreeTextCustomFieldSearchInputTransformer(
+        searchInputTransformer = new ExactTextCustomFieldSearchInputTransformer(
                 field,
                 names,
                 searcherInformation.getId(),

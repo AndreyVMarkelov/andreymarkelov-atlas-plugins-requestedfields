@@ -19,7 +19,7 @@ public class PluginDataImpl implements PluginData {
      * Constructor.
      */
     public PluginDataImpl(PluginSettingsFactory pluginSettingsFactory) {
-        this.pluginSettings = pluginSettingsFactory.createSettingsForKey(PLUGIN_KEY);;
+        this.pluginSettings = pluginSettingsFactory.createSettingsForKey(PLUGIN_KEY);
     }
 
     @Override

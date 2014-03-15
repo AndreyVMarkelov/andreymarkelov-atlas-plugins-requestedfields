@@ -3,15 +3,16 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.andreymarkelov.atlas.plugins</groupId>
     <artifactId>requestedfields</artifactId>
-    <version>1.1.6</version>
+    <version>1.1.7</version>
+    <packaging>atlassian-plugin</packaging>
 
     <organization>
         <name>Andrey Markelov</name>
         <url>http://ru.linkedin.com/in/andreymarkelov/</url>
     </organization>
+
     <name>HTTP Feed Custom Fields</name>
     <description>Feed select list options using HTTP via JSON or XML</description>
-    <packaging>atlassian-plugin</packaging>
 
     <dependencies>
         <dependency>
@@ -101,7 +102,7 @@
 
     <properties>
         <jira.version>5.2.8</jira.version>
-        <!--<jira.version>6.1-OD-07</jira.version>-->
+        <!-- <jira.version>6.2-OD-01</jira.version> -->
         <amps.version>4.1.6</amps.version>
         <useFastdevCli>false</useFastdevCli>
     </properties>

@@ -16,7 +16,7 @@
     <resource type="i18n" name="i18n" location="i18n.requestedfields"/>
 
     <!-- add our web resources -->
-    <web-resource key="requestedfields-resources" name="requestedfields Web Resources">
+    <web-resource key="requestedfields-resources" name="Request custom fields Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
         <resource type="download" name="requestedfields.css" location="/css/requestedfields.css"/>
         <resource type="download" name="requestedfields.js" location="/js/requestedfields.js"/>
@@ -24,8 +24,8 @@
         <context>requestedfields</context>
     </web-resource>
 
-    <webwork1 key="requestedfields-configaction" name="Currency configuration action" class="java.lang.Object">
-        <description>The action for editing a currency custom field type configuration.</description>
+    <webwork1 key="requestedfields-configaction" name="Request custom fields configuration action" class="java.lang.Object">
+        <description>The action for editing a JSON/XML Request Custom Field type configuration.</description>
         <actions>
             <action name="ru.andreymarkelov.atlas.plugins.requestedfiedls.EditConfiguration" alias="EditCurrencyConfig">
                 <view name="input">/templates/requestedfields/edit-config.vm</view>
