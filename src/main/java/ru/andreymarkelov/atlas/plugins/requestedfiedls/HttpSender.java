@@ -57,7 +57,7 @@ public class HttpSender {
     /**
      * Call service.
      */
-    protected String call(String data) {
+    public String call(String data) {
         StringBuilder infWebSvcReplyString = new StringBuilder();
 
         try {

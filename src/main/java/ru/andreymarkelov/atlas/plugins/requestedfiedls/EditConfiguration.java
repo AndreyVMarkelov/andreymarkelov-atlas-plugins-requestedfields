@@ -4,6 +4,7 @@ import com.atlassian.jira.config.managedconfiguration.ManagedConfigurationItemSe
 import com.atlassian.jira.security.Permissions;
 import com.atlassian.jira.web.action.admin.customfields.AbstractEditConfigurationItemAction;
 
+@SuppressWarnings("unchecked")
 public class EditConfiguration extends AbstractEditConfigurationItemAction {
     private static final long serialVersionUID = -4644319955468389371L;
 

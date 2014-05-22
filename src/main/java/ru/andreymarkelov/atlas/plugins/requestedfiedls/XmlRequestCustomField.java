@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.atlassian.jira.issue.Issue;
-import com.atlassian.jira.issue.customfields.impl.TextCFType;
+import com.atlassian.jira.issue.customfields.impl.GenericTextCFType;
 import com.atlassian.jira.issue.customfields.manager.GenericConfigManager;
 import com.atlassian.jira.issue.customfields.persistence.CustomFieldValuePersister;
 import com.atlassian.jira.issue.fields.CustomField;
@@ -13,7 +13,7 @@ import com.atlassian.jira.issue.fields.config.FieldConfigItemType;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutItem;
 import com.atlassian.templaterenderer.TemplateRenderer;
 
-public class XmlRequestCustomField extends TextCFType  {
+public class XmlRequestCustomField extends GenericTextCFType  {
     private final PluginData pluginData;
     private final TemplateRenderer renderer;
 

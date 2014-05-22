@@ -20,7 +20,6 @@ import com.atlassian.jira.issue.search.ClauseNames;
 import com.atlassian.jira.issue.search.LuceneFieldSorter;
 import com.atlassian.jira.issue.search.searchers.renderer.SearchRenderer;
 import com.atlassian.jira.issue.search.searchers.transformer.SearchInputTransformer;
-import com.atlassian.jira.issue.statistics.StatisticsMapper;
 import com.atlassian.jira.issue.statistics.TextFieldSorter;
 import com.atlassian.jira.jql.operand.JqlOperandResolver;
 import com.atlassian.jira.web.FieldVisibilityManager;
@@ -49,7 +48,7 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
             JqlOperandResolver jqlOperandResolver,
             CustomFieldInputHelper customFieldInputHelper,
             FieldVisibilityManager fieldVisibilityManager) {
-        super(jqlOperandResolver, customFieldInputHelper);
+        super(jqlOperandResolver, customFieldInputHelper, fieldVisibilityManager);
         this.customFieldInputHelper = customFieldInputHelper;
         this.fieldVisibilityManager = fieldVisibilityManager;
     }
@@ -82,11 +81,11 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
         };
     }
 
-    public StatisticsMapper getStatisticsMapper(CustomField customField) {
+    public AbstractCustomFieldStatisticsMapper getStatisticsMapper(CustomField customField) {
         return new AbstractCustomFieldStatisticsMapper(customField) {
             @Override
-            public Comparator getComparator() {
-                return new Comparator() {
+            public Comparator<Object> getComparator() {
+                return new Comparator<Object>() {
                     public int compare(Object o1, Object o2) {
                         if (o1 == null && o2 == null) {
                             return 0;

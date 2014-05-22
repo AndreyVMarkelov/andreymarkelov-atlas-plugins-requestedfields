@@ -13,6 +13,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.xml.dtm.ref.DTMNodeList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -25,18 +26,25 @@ public class XmlHttpRunner {
     private JSONFieldData data;
     private Object defValue;
 
+    private HttpSender httpService;
+
     public XmlHttpRunner(JSONFieldData data, Object defValue) {
         this.data = data;
         this.defValue = defValue;
+        httpService = new HttpSender(data.getUrl(), data.getReqType(), data.getReqDataType(), data.getUser(), data.getPassword());
+    }
+
+    public XmlHttpRunner(JSONFieldData data, Object defValue, HttpSender httpService) {
+        this.data = data;
+        this.defValue = defValue;
+        this.httpService = httpService;
     }
 
     public HttpRunnerData getData() {
         HttpRunnerData res = new HttpRunnerData();
 
         try {
-            HttpSender httpService = new HttpSender(data.getUrl(), data.getReqType(), data.getReqDataType(), data.getUser(), data.getPassword());
             String xml = httpService.call(data.getReqData());
-
             List<String> vals = new ArrayList<String>();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
@@ -49,6 +57,7 @@ public class XmlHttpRunner {
             NodeList nodes = (NodeList) result;
             for (int i = 0; i < nodes.getLength(); i++) {
                 Node node = nodes.item(i);
+                System.out.printf("xml:%s %s\n", node, node.getNodeType());
                 if (node.getNodeType() == Node.TEXT_NODE) {
                     String nodeText = node.getTextContent();
                     if (!StringUtils.isEmpty(nodeText)) {

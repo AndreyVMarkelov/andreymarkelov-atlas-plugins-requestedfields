@@ -96,7 +96,7 @@ public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearch
         return searchRenderer;
     }
 
-    public LuceneFieldSorter getSorter(CustomField customField) {
+    public LuceneFieldSorter<?> getSorter(CustomField customField) {
         return new TextFieldSorter(customField.getId());
     }
 

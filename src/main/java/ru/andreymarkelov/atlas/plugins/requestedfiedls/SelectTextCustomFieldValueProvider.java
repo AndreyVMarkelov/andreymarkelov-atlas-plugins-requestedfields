@@ -43,6 +43,7 @@ public class SelectTextCustomFieldValueProvider implements CustomFieldValueProvi
             String json = httpService.call(data.getReqData());
 
             JsonPath namePath = JsonPath.compile(data.getReqPath());
+            @SuppressWarnings("unchecked")
             List<String> vals = namePath.read(json, List.class);
             if (vals != null) {
                 if (!vals.isEmpty()) {
@@ -72,6 +73,7 @@ public class SelectTextCustomFieldValueProvider implements CustomFieldValueProvi
     }
 
     public Object getValue(CustomField customField, FieldValuesHolder fieldValuesHolder) {
+        @SuppressWarnings("rawtypes")
         CustomFieldType customFieldType = customField.getCustomFieldType();
         final CustomFieldParams customFieldParams = customField.getCustomFieldValues(fieldValuesHolder);
         return customFieldType.getValueFromCustomFieldParams(customFieldParams);
