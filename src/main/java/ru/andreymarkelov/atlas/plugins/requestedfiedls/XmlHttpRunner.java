@@ -1,24 +1,28 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.stream.StreamSource;
 
+import net.sf.saxon.om.NodeInfo;
+import net.sf.saxon.s9api.Axis;
 import net.sf.saxon.s9api.Processor;
 import net.sf.saxon.s9api.XPathCompiler;
 import net.sf.saxon.s9api.XPathExecutable;
 import net.sf.saxon.s9api.XPathSelector;
 import net.sf.saxon.s9api.XdmItem;
 import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.tree.tiny.TinyElementImpl;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 public class XmlHttpRunner {
     private static final Logger log = LoggerFactory.getLogger(XmlHttpRunner.class);
@@ -50,20 +54,19 @@ public class XmlHttpRunner {
             factory.setNamespaceAware(true);
             Processor proc = new Processor(false);
             net.sf.saxon.s9api.DocumentBuilder s9builder = proc.newDocumentBuilder();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(new ByteArrayInputStream(xml.getBytes()));
-            XdmNode s9doc = s9builder.wrap(doc);
+            XdmNode source = proc.newDocumentBuilder().build(new StreamSource(IOUtils.toInputStream(xml)));
 
             XPathCompiler compiler = proc.newXPathCompiler();
             
-            UniversalNamespaceCache nsCache = new UniversalNamespaceCache(doc,false);
+ 
+            UniversalNamespaceCache nsCache = new UniversalNamespaceCache(source,false);
             
             for(String nsname : nsCache.getAllPrefixes()) {
                 compiler.declareNamespace(nsname, nsCache.getNamespaceURI(nsname));
             }
             XPathExecutable expr = compiler.compile(data.getReqPath());
             XPathSelector selector = expr.load();
-            selector.setContextItem(s9doc);
+            selector.setContextItem(source);
             selector.evaluate();
             for (XdmItem item : selector) {
                 System.out.printf("item=%s\n", item);

@@ -2,6 +2,7 @@ package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 
 //This is from http://www.ibm.com/developerworks/java/library/x-nmspccontext/
 // written by Holger Kraus
+// reworked for saxon interfaces by Árpád Magosányi
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,6 +11,14 @@ import java.util.Set;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
+
+import net.sf.saxon.s9api.Axis;
+import net.sf.saxon.s9api.XdmItem;
+import net.sf.saxon.s9api.XdmNode;
+import net.sf.saxon.s9api.XdmNodeKind;
+import net.sf.saxon.s9api.XdmSequenceIterator;
+import net.sf.saxon.tree.NamespaceNode;
+import net.sf.saxon.tree.tiny.TinyDocumentImpl;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -31,8 +40,9 @@ public class UniversalNamespaceCache implements NamespaceContext {
      * @param toplevelOnly
      *            restriction of the search to enhance performance
      */
-    public UniversalNamespaceCache(Document document, boolean toplevelOnly) {
-        examineNode(document.getFirstChild(), toplevelOnly);
+    public UniversalNamespaceCache(XdmNode source, boolean toplevelOnly) {
+    	
+        examineNode(source, toplevelOnly);
         System.out.println("The list of the cached namespaces:");
         for (String key : prefix2Uri.keySet()) {
             System.out
@@ -43,24 +53,27 @@ public class UniversalNamespaceCache implements NamespaceContext {
     /**
      * A single node is read, the namespace attributes are extracted and stored.
      * 
-     * @param node
+     * @param source
      *            to examine
      * @param attributesOnly,
      *            if true no recursion happens
      */
-    private void examineNode(Node node, boolean attributesOnly) {
-        NamedNodeMap attributes = node.getAttributes();
-        for (int i = 0; i < attributes.getLength(); i++) {
-            Node attribute = attributes.item(i);
-            storeAttribute((Attr) attribute);
+    private void examineNode(XdmNode source, boolean attributesOnly) {
+    	XdmSequenceIterator attributes = source.axisIterator(Axis.NAMESPACE);
+    	System.out.printf("source=%s\nkind=%s\nattrs=%s\n",source.getUnderlyingNode(), source.getNodeKind(), attributes.hasNext());
+        while (attributes.hasNext()) {
+            NamespaceNode attribute = (NamespaceNode) ((XdmNode) attributes.next()).getUnderlyingNode();
+            System.out.printf("att=%s\n", attribute);
+            storeAttribute(attribute);
         }
 
         if (!attributesOnly) {
-            NodeList chields = node.getChildNodes();
-            for (int i = 0; i < chields.getLength(); i++) {
-                Node chield = chields.item(i);
-                if (chield.getNodeType() == Node.ELEMENT_NODE)
-                    examineNode(chield, false);
+            XdmSequenceIterator chields = source.axisIterator(Axis.CHILD);
+            while (chields.hasNext()) {
+            	XdmNode chield = (XdmNode) chields.next();
+            	System.out.printf("chield:%s\n", chield);
+				if(chield.getNodeKind() == XdmNodeKind.ELEMENT)
+                	examineNode((XdmNode) chield, false);
             }
         }
     }
@@ -72,20 +85,11 @@ public class UniversalNamespaceCache implements NamespaceContext {
      * @param attribute
      *            to examine
      */
-    private void storeAttribute(Attr attribute) {
+    private void storeAttribute(NamespaceNode attribute) {
         // examine the attributes in namespace xmlns
-        if (attribute.getNamespaceURI() != null
-                && attribute.getNamespaceURI().equals(
-                        XMLConstants.XMLNS_ATTRIBUTE_NS_URI)) {
-            // Default namespace xmlns="uri goes here"
-            if (attribute.getNodeName().equals(XMLConstants.XMLNS_ATTRIBUTE)) {
-                putInCache(DEFAULT_NS, attribute.getNodeValue());
-            } else {
-                // The defined prefixes are stored here
-                putInCache(attribute.getLocalName(), attribute.getNodeValue());
-            }
-        }
-
+    	System.out.printf("prefix=%s\n",attribute.getLocalPart());
+    	System.out.printf("uri=%s\n",attribute.getStringValue());
+    	putInCache(attribute.getLocalPart(),attribute.getStringValue());
     }
 
     private void putInCache(String prefix, String uri) {
