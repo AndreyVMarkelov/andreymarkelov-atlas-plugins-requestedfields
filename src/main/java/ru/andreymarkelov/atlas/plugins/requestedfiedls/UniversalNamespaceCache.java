@@ -13,18 +13,10 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 
 import net.sf.saxon.s9api.Axis;
-import net.sf.saxon.s9api.XdmItem;
 import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XdmNodeKind;
 import net.sf.saxon.s9api.XdmSequenceIterator;
 import net.sf.saxon.tree.NamespaceNode;
-import net.sf.saxon.tree.tiny.TinyDocumentImpl;
-
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class UniversalNamespaceCache implements NamespaceContext {
     public static final String DEFAULT_NS = "";
