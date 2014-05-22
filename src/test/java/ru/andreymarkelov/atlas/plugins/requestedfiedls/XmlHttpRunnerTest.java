@@ -12,12 +12,27 @@ public class XmlHttpRunnerTest {
 
     @Test
     public void oneTextNodeWorks() {
-        assertXmlRunnerFunctionality("<foo>result</foo>", "//foo/text()", Arrays.asList("Default Value", "result"));
+        assertXmlRunnerFunctionality(
+                "<foo>result</foo>",
+                "//foo/text()",
+                Arrays.asList(
+                        "Default Value",
+                        "result"
+                )
+        );
     }
 
     @Test
     public void moreTextNodesWork() {
-        assertXmlRunnerFunctionality("<bar><foo>result</foo><foo>result2</foo></bar>", "//foo/text()", Arrays.asList("Default Value", "result"));
+        assertXmlRunnerFunctionality(
+                "<bar><foo>result</foo><foo>result2</foo></bar>",
+                "//foo/text()",
+                Arrays.asList(
+                        "Default Value",
+                        "result",
+                        "result2"
+                )
+        );
     }
     
     private void assertXmlRunnerFunctionality(String xml, String path,
