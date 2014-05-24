@@ -35,11 +35,6 @@ public class UniversalNamespaceCache implements NamespaceContext {
     public UniversalNamespaceCache(XdmNode source, boolean toplevelOnly) {
     	
         examineNode(source, toplevelOnly);
-        System.out.println("The list of the cached namespaces:");
-        for (String key : prefix2Uri.keySet()) {
-            System.out
-                    .println("prefix " + key + ": uri " + prefix2Uri.get(key));
-        }
     }
 
     /**
@@ -52,10 +47,8 @@ public class UniversalNamespaceCache implements NamespaceContext {
      */
     private void examineNode(XdmNode source, boolean attributesOnly) {
     	XdmSequenceIterator attributes = source.axisIterator(Axis.NAMESPACE);
-    	System.out.printf("source=%s\nkind=%s\nattrs=%s\n",source.getUnderlyingNode(), source.getNodeKind(), attributes.hasNext());
         while (attributes.hasNext()) {
             NamespaceNode attribute = (NamespaceNode) ((XdmNode) attributes.next()).getUnderlyingNode();
-            System.out.printf("att=%s\n", attribute);
             storeAttribute(attribute);
         }
 
@@ -63,7 +56,6 @@ public class UniversalNamespaceCache implements NamespaceContext {
             XdmSequenceIterator chields = source.axisIterator(Axis.CHILD);
             while (chields.hasNext()) {
             	XdmNode chield = (XdmNode) chields.next();
-            	System.out.printf("chield:%s\n", chield);
 				if(chield.getNodeKind() == XdmNodeKind.ELEMENT)
                 	examineNode((XdmNode) chield, false);
             }
@@ -79,8 +71,6 @@ public class UniversalNamespaceCache implements NamespaceContext {
      */
     private void storeAttribute(NamespaceNode attribute) {
         // examine the attributes in namespace xmlns
-    	System.out.printf("prefix=%s\n",attribute.getLocalPart());
-    	System.out.printf("uri=%s\n",attribute.getStringValue());
     	putInCache(attribute.getLocalPart(),attribute.getStringValue());
     }
 

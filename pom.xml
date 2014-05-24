@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.andreymarkelov.atlas.plugins</groupId>
     <artifactId>requestedfields</artifactId>
-    <version>1.1.8</version>
+    <version>1.1.8.4</version>
     <packaging>atlassian-plugin</packaging>
 
     <organization>
@@ -15,23 +15,44 @@
     <description>Feed select list options using HTTP via JSON or XML</description>
 
     <dependencies>
-        <dependency>
-	  <groupId>net.sf.saxon</groupId>
-	  <artifactId>Saxon-HE</artifactId>
-	  <version>9.4</version>
-        </dependency>
-
+	     <dependency>
+		   <groupId>net.sf.saxon</groupId>
+		   <artifactId>Saxon-HE</artifactId>
+		   <version>9.4</version>
+		   <exclusions>
+		   	<exclusion>
+		   		<artifactId>xom</artifactId>
+		   		<groupId>xom</groupId>
+		   	</exclusion>
+		   	<exclusion>
+		   		<artifactId>dom4j</artifactId>
+		   		<groupId>dom4j</groupId>
+		   	</exclusion>
+		   </exclusions>
+	     </dependency>
         <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-api</artifactId>
             <version>${jira.version}</version>
             <scope>provided</scope>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>dom4j</artifactId>
+            		<groupId>dom4j</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.atlassian.jira</groupId>
             <artifactId>jira-core</artifactId>
             <version>${jira.version}</version>
             <scope>provided</scope>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>dom4j</artifactId>
+            		<groupId>dom4j</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <!--<dependency>
             <groupId>com.atlassian.jira</groupId>
@@ -113,7 +134,7 @@
     </build>
 
     <properties>
-        <jira.version>5.2.8</jira.version>
+        <jira.version>5.2.4</jira.version>
         <!-- <jira.version>6.2-OD-01</jira.version> -->
         <amps.version>4.1.6</amps.version>
         <useFastdevCli>false</useFastdevCli>

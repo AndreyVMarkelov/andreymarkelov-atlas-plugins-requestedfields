@@ -110,7 +110,7 @@ public class XmlHttpRunnerTest {
         Object defValue = "Default Value";
         XmlHttpRunner runner = new XmlHttpRunner(data, defValue, mockSender);
         HttpRunnerData returned = runner.getData();
-        System.out.printf("returned: %s\n", returned);
+        //System.out.printf("returned: %s\n", returned);
         assertEquals(expected, returned.getVals());
     }
 }
