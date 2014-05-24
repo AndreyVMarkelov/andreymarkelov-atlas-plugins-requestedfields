@@ -138,5 +138,6 @@
         <!-- <jira.version>6.2-OD-01</jira.version> -->
         <amps.version>4.1.6</amps.version>
         <useFastdevCli>false</useFastdevCli>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>
