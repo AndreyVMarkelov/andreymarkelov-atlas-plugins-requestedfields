@@ -69,6 +69,7 @@ public class HttpSender {
             httpConn.setRequestMethod(type);
             httpConn.setRequestProperty("Host", url.getHost());
             httpConn.setRequestProperty("Content-Type","application/" + reqDataType + "; charset=utf-8");
+            httpConn.setRequestProperty("Accept","application/" + reqDataType);
             if (isAuth()) {
                 httpConn.setRequestProperty("Authorization", "Basic " + getAuthRealm());
             }
@@ -117,7 +118,13 @@ public class HttpSender {
      * Get auth realm.
      */
     private String getAuthRealm() {
-        return Base64.encodeBase64String(user.concat(":").concat(password).getBytes());
+        String encoded = new sun.misc.BASE64Encoder() {
+            @Override protected int bytesPerLine() {
+                return 9999;
+            }
+        }.encode(user.concat(":").concat(password).getBytes());
+
+        return encoded;
     }
 
     private boolean isAuth() {
