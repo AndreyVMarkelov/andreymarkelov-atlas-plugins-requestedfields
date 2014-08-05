@@ -3,13 +3,31 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.andreymarkelov.atlas.plugins</groupId>
     <artifactId>requestedfields</artifactId>
-    <version>1.1.7</version>
+    <version>1.1.8</version>
     <packaging>atlassian-plugin</packaging>
 
     <organization>
         <name>Andrey Markelov</name>
         <url>http://ru.linkedin.com/in/andreymarkelov/</url>
     </organization>
+
+    <developers>
+        <developer>
+            <id>amarkelov</id>
+            <name>Andrey Markelov</name>
+            <email>andrey.v.markelov@gmail.com</email>
+            <url>http://www.linkedin.com/in/andreymarkelov</url>
+            <organization>AM Works</organization>
+            <organizationUrl>https://www.elance.com/s/andrey_v_markelov/</organizationUrl>
+            <roles>
+                <role>architect</role>
+            </roles>
+            <timezone>-6</timezone>
+            <properties>
+                <picUrl>https://ru.gravatar.com/userimage/40110624/4333e7519c10a3a0ad639db857dfdbdb.jpeg</picUrl>
+            </properties>
+        </developer>
+    </developers>
 
     <name>HTTP Feed Custom Fields</name>
     <description>Feed select list options using HTTP via JSON or XML</description>
@@ -35,12 +53,6 @@
         </dependency>-->
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
@@ -57,12 +69,6 @@
             <artifactId>slf4j-api</artifactId>
             <version>1.6.6</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.8.5</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.nebhale.jsonpath</groupId>
@@ -89,6 +95,12 @@
                     <productVersion>${jira.version}</productVersion>
                     <productDataVersion>${jira.version}</productDataVersion>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.atlassian.maven.plugins</groupId>
+                <artifactId>maven-amps-plugin</artifactId>
+                <version>${amps.version}</version>
+                <extensions>true</extensions>
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
