@@ -2,6 +2,9 @@
     <head>
         <title>#if($action.isXmlField())$i18n.getText('requestedfields.config.titleXML')#else$i18n.getText('requestedfields.config.titleJSON')#end</title>
         <meta content="admin" name="decorator"/>
+        <meta content="admin" name="decorator"/>
+        <meta name="admin.active.section" content="admin_issues_menu/element_options_section/fields_section"/>
+        <meta name="admin.active.tab" content="view_custom_fields"/>
         <link rel="stylesheet" type="text/css" media="print" href="/styles/combined-printable.css">
         <link type="text/css" rel="StyleSheet" media="all" href="/styles/combined.css"/>
         <script language="javascript">
