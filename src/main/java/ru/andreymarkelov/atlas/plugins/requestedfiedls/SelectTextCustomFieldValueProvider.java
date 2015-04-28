@@ -17,6 +17,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.util.HttpSender;
+
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.customfields.CustomFieldType;
 import com.atlassian.jira.issue.customfields.CustomFieldValueProvider;

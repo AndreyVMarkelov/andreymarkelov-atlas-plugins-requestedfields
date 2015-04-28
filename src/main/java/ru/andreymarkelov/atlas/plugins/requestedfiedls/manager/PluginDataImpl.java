@@ -1,23 +1,17 @@
-package ru.andreymarkelov.atlas.plugins.requestedfiedls;
+package ru.andreymarkelov.atlas.plugins.requestedfiedls.manager;
+
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.util.JSONFieldDataTranslator;
 
 import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 
 public class PluginDataImpl implements PluginData {
-    /**
-     * Plug-In Jira db key.
-     */
     private final String PLUGIN_KEY = "RequestedFields";
 
-    /**
-     * Plug-In settings.
-     */
     private final PluginSettings pluginSettings;
 
-    /**
-     * Constructor.
-     */
     public PluginDataImpl(PluginSettingsFactory pluginSettingsFactory) {
         this.pluginSettings = pluginSettingsFactory.createSettingsForKey(PLUGIN_KEY);
     }

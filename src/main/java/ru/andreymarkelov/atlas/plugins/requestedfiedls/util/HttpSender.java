@@ -1,4 +1,4 @@
-package ru.andreymarkelov.atlas.plugins.requestedfiedls;
+package ru.andreymarkelov.atlas.plugins.requestedfiedls.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,10 +54,7 @@ public class HttpSender {
         this.password = password;
     }
 
-    /**
-     * Call service.
-     */
-    protected String call(String data) {
+    public String call(String data) {
         StringBuilder infWebSvcReplyString = new StringBuilder();
 
         try {

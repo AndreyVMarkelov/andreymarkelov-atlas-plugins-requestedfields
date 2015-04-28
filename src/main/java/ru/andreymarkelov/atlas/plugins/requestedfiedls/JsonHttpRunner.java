@@ -6,6 +6,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.HttpRunnerData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.util.HttpSender;
+
 import com.nebhale.jsonpath.JsonPath;
 
 public class JsonHttpRunner {

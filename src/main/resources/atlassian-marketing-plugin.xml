@@ -1,17 +1,16 @@
 <atlassian-plugin-marketing>
     <compatibility>
-        <product name="jira" min="5.2-rc1" max="6.3.0"/>
-        <!--<product name="jira" min="5.0" max="5.1.8"/>-->
+        <product name="jira" min="6.3" max="6.4.14"/>
     </compatibility>
-    <logo image="images/http.png"/>
-    <banner image="images/banner_1.jpg"/>
+    <logo image="/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/http.png"/>
+    <banner image="/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/banner_1.jpg"/>
     <highlights>
-        <highlight image="images/v00.png" cropped="images/v00.png"/>
-        <highlight image="images/v66.png" cropped="images/v66.png"/>
-        <highlight image="images/v77.png" cropped="images/v77.png"/>
+        <highlight image="/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/v00.png" cropped="images/v00.png"/>
+        <highlight image="/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/v66.png" cropped="images/v66.png"/>
+        <highlight image="/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/v77.png" cropped="images/v77.png"/>
     </highlights>
     <screenshots>
-        <screenshot image="images/v00.png"/>
-        <screenshot image="images/v66.png"/>
+        <screenshot image="/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/v00.png"/>
+        <screenshot image="/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/v66.png"/>
     </screenshots>
 </atlassian-plugin-marketing>

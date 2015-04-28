@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <atlassian-plugin key="${project.groupId}.${project.artifactId}" name="${project.name}" plugins-version="2">
     <plugin-info>
         <description>${project.description}</description>
         <version>${project.version}</version>
         <vendor name="${project.organization.name}" url="${project.organization.url}"/>
-        <param name="plugin-icon">images/http.png</param>
-        <param name="plugin-logo">images/http.png</param>
-        <param name="plugin-banner">images/banner_1.jpg</param>
-        <param name="vendor-icon">images/144.jpg</param>
-        <param name="vendor-logo">images/32.jpg</param>
+        <param name="plugin-icon">/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/http.png</param>
+        <param name="plugin-logo">/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/http.png</param>
+        <param name="plugin-banner">/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/banner_1.jpg</param>
+        <param name="vendor-icon">/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/144.jpg</param>
+        <param name="vendor-logo">/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/32.jpg</param>
+        <param name="atlassian-data-center-compatible">true</param>
     </plugin-info>
 
-    <!-- add our i18n resource -->
-    <resource type="i18n" name="i18n" location="i18n.requestedfields"/>
+    <!-- I18N -->
+    <resource type="i18n" name="i18n" location="ru.andreymarkelov.atlas.plugins.requestedfiedls.i18n.requestedfields"/>
 
-    <!-- add our web resources -->
+    <!-- Web Resources -->
     <web-resource key="requestedfields-resources" name="Request custom fields Web Resources">
         <dependency>com.atlassian.auiplugin:ajs</dependency>
-        <resource type="download" name="requestedfields.css" location="/css/requestedfields.css"/>
-        <resource type="download" name="requestedfields.js" location="/js/requestedfields.js"/>
-        <resource type="download" name="images/" location="/images"/>
+        <resource type="download" name="requestedfields.css" location="/ru/andreymarkelov/atlas/plugins/requestedfiedls/css/requestedfields.css"/>
+        <resource type="download" name="requestedfields.js" location="/ru/andreymarkelov/atlas/plugins/requestedfiedls/js/requestedfields.js"/>
+        <resource type="download" name="images/" location="/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/"/>
         <context>requestedfields</context>
     </web-resource>
 
+    <!-- Actions -->
     <webwork1 key="requestedfields-configaction" name="Request custom fields configuration action" class="java.lang.Object">
         <description>The action for editing a JSON/XML Request Custom Field type configuration.</description>
         <actions>
-            <action name="ru.andreymarkelov.atlas.plugins.requestedfiedls.EditConfiguration" alias="EditCurrencyConfig">
-                <view name="input">/templates/requestedfields/edit-config.vm</view>
+            <action name="ru.andreymarkelov.atlas.plugins.requestedfiedls.action.EditConfiguration" alias="EditCurrencyConfig">
+                <view name="input">/ru/andreymarkelov/atlas/plugins/requestedfiedls/templates/action/edit-config.vm</view>
             </action>
         </actions>
     </webwork1>
 
-    <!-- import from the product container -->
-    <component key="requestedfields-plugindata" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.PluginDataImpl" public="true">
-        <interface>ru.andreymarkelov.atlas.plugins.requestedfiedls.PluginData</interface>
+    <!-- Component Imports -->
+    <component key="requestedfields-plugindata" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginDataImpl" public="true">
+        <interface>ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData</interface>
     </component>
     <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
     <component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/>
@@ -46,14 +47,14 @@
         <description key="json-request-custom-field.description">The Json Request Custom Field</description>
         <resource name="view" type="velocity" location="/templates/requestedfields/view.vm"/>
         <resource name="edit" type="velocity" location="/templates/requestedfields/edit.vm"/>
-        <resource type="download" name="customfieldpreview.png" location="images/json.png"/>
+        <resource type="download" name="customfieldpreview.png" location="/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/json.png"/>
     </customfield-type>
 
     <customfield-type name="XML Request Custom Field" i18n-name-key="xml-request-custom-field.name" key="xml-request-custom-field" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.XmlRequestCustomField">
         <description key="xml-request-custom-field.description">The XML Request Custom Field</description>
         <resource name="view" type="velocity" location="/templates/requestedfields/view.vm"/>
         <resource name="edit" type="velocity" location="/templates/requestedfields/edit.vm"/>
-        <resource type="download" name="customfieldpreview.png" location="images/xml.png"/>
+        <resource type="download" name="customfieldpreview.png" location="/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/xml.png"/>
     </customfield-type>
 
     <!-- Multi fields -->
@@ -61,17 +62,25 @@
         <description key="json-request-multi-custom-field.description">The JSON Multi Request Custom Field</description>
         <resource name="view" type="velocity" location="/templates/requestedfields/multi-view.vm"/>
         <resource name="edit" type="velocity" location="/templates/requestedfields/multi-edit.vm"/>
-        <resource type="download" name="customfieldpreview.png" location="images/multijson.png"/>
+        <resource type="download" name="customfieldpreview.png" location="/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/multijson.png"/>
     </customfield-type>
 
     <customfield-type name="XML Multi Request Custom Field" i18n-name-key="xml-request-multi-custom-field.name" key="xml-multi-request-custom-field" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.XmlRequestMultiCustomField">
         <description key="xml-request-multi-custom-field.description">The XML Multi Request Custom Field</description>
         <resource name="view" type="velocity" location="/templates/requestedfields/multi-view.vm"/>
         <resource name="edit" type="velocity" location="/templates/requestedfields/multi-edit.vm"/>
-        <resource type="download" name="customfieldpreview.png" location="images/multixml.png"/>
+        <resource type="download" name="customfieldpreview.png" location="/ru/andreymarkelov/atlas/plugins/requestedfiedls/images/multixml.png"/>
     </customfield-type>
 
     <!-- Searches -->
+    <customfield-searcher key="json-request-custom-field-freetextsearcher" name="JSON Request Custom Free Text Searcher"
+                          class="com.atlassian.jira.issue.customfields.searchers.TextSearcher">
+        <description>Reference Free Text Searcher</description>
+        <resource type="velocity" name="search" location="templates/plugins/fields/edit-searcher/search-basictext.vm"/>
+        <resource type="velocity" name="view" location="templates/plugins/fields/view-searcher/view-searcher-basictext.vm"/>
+        <valid-customfield-type package="${project.groupId}.${project.artifactId}" key="json-request-custom-field"/>
+    </customfield-searcher>
+
     <customfield-searcher key="json-request-custom-field-searcher" name="JSON Request Custom Field Searcher"
                           i18n-name-key="json-request-custom-field.searcher" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.SelectTextCustomFieldSearcher">
         <description>Allow searching for JSON Request Custom Field</description>
@@ -79,6 +88,14 @@
         <resource type="velocity" name="search" location="/templates/requestedfields/search-select.vm"/>
         <resource type="velocity" name="view" location="/templates/requestedfields/view-search-select.vm"/>
         <valid-customfield-type package="${project.groupId}.${project.artifactId}" key="json-request-custom-field"/>
+    </customfield-searcher>
+
+    <customfield-searcher key="xml-request-custom-field-freetextsearcher" name="XML Request Custom Field Free Text Searcher"
+                          class="com.atlassian.jira.issue.customfields.searchers.TextSearcher">
+        <description>Reference Free Text Searcher</description>
+        <resource type="velocity" name="search" location="templates/plugins/fields/edit-searcher/search-basictext.vm"/>
+        <resource type="velocity" name="view" location="templates/plugins/fields/view-searcher/view-searcher-basictext.vm"/>
+        <valid-customfield-type package="${project.groupId}.${project.artifactId}" key="xml-request-custom-field"/>
     </customfield-searcher>
 
     <customfield-searcher key="xml-request-custom-field-searcher" name="XML Request Custom Field Searcher"

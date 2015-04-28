@@ -1,4 +1,4 @@
-package ru.andreymarkelov.atlas.plugins.requestedfiedls;
+package ru.andreymarkelov.atlas.plugins.requestedfiedls.util;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -18,6 +18,9 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.HttpRunnerData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
 
 public class XmlHttpRunner {
     private static final Logger log = LoggerFactory.getLogger(XmlHttpRunner.class);

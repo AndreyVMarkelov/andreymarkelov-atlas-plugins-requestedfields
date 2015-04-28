@@ -1,18 +1,12 @@
-package ru.andreymarkelov.atlas.plugins.requestedfiedls;
+package ru.andreymarkelov.atlas.plugins.requestedfiedls.model;
 
 public class JSONFieldData {
     private String url;
-
     private String user;
-
     private String password;
-
     private String reqType;
-
     private String reqData;
-
     private String reqPath;
-
     private String reqDataType;
 
     public JSONFieldData() {

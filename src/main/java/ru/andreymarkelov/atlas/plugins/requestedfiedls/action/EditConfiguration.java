@@ -1,13 +1,21 @@
-package ru.andreymarkelov.atlas.plugins.requestedfiedls;
+package ru.andreymarkelov.atlas.plugins.requestedfiedls.action;
+
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
 
 import com.atlassian.jira.config.managedconfiguration.ManagedConfigurationItemService;
-import com.atlassian.jira.security.Permissions;
+import com.atlassian.jira.permission.GlobalPermissionKey;
+import com.atlassian.jira.security.GlobalPermissionManager;
+import com.atlassian.jira.security.JiraAuthenticationContext;
+import com.atlassian.jira.security.xsrf.RequiresXsrfCheck;
 import com.atlassian.jira.web.action.admin.customfields.AbstractEditConfigurationItemAction;
 
 public class EditConfiguration extends AbstractEditConfigurationItemAction {
     private static final long serialVersionUID = -4644319955468389371L;
 
     private final PluginData pluginData;
+    private final JiraAuthenticationContext authenticationContext;
+    private final GlobalPermissionManager globalPermissionManager;
 
     private String url;
     private String user;
@@ -16,16 +24,16 @@ public class EditConfiguration extends AbstractEditConfigurationItemAction {
     private String reqData;
     private String reqPath;
 
-    public EditConfiguration(ManagedConfigurationItemService managedConfigurationItemService, PluginData pluginData) {
+    public EditConfiguration(
+            ManagedConfigurationItemService managedConfigurationItemService,
+            PluginData pluginData,
+            JiraAuthenticationContext authenticationContext,
+            GlobalPermissionManager globalPermissionManager) {
         super(managedConfigurationItemService);
         this.pluginData = pluginData;
+        this.authenticationContext = authenticationContext;
+        this.globalPermissionManager = globalPermissionManager;
     }
-
-    /*
-    public EditConfiguration(PluginData pluginData) {
-        this.pluginData = pluginData;
-    }
-    */
 
     @Override
     public String doDefault() throws Exception {
@@ -43,9 +51,9 @@ public class EditConfiguration extends AbstractEditConfigurationItemAction {
     }
 
     @Override
-    @com.atlassian.jira.security.xsrf.RequiresXsrfCheck
+    @RequiresXsrfCheck
     protected String doExecute() throws Exception {
-        if (!isHasPermission(Permissions.ADMINISTER)) {
+        if (!globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, getLoggedInApplicationUser())) {
             return "securitybreach";
         }
 
@@ -57,11 +65,11 @@ public class EditConfiguration extends AbstractEditConfigurationItemAction {
     @Override
     protected void doValidation() {
         if (url ==null || url.length() == 0) {
-            addErrorMessage(getText("requestedfields.config.error.url"));
+            addErrorMessage(authenticationContext.getI18nHelper().getText("requestedfields.config.error.url"));
         }
 
         if (reqPath ==null || reqPath.length() == 0) {
-            addErrorMessage(getText(isXmlField() ? "requestedfields.config.error.reqPathXML" : "requestedfields.config.error.reqPathJSON"));
+            addErrorMessage(authenticationContext.getI18nHelper().getText(isXmlField() ? "requestedfields.config.error.reqPathXML" : "requestedfields.config.error.reqPathJSON"));
         }
     }
 

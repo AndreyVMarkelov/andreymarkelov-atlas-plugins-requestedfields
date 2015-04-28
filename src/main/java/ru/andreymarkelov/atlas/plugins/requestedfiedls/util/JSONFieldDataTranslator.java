@@ -1,6 +1,8 @@
-package ru.andreymarkelov.atlas.plugins.requestedfiedls;
+package ru.andreymarkelov.atlas.plugins.requestedfiedls.util;
 
 import org.apache.log4j.Logger;
+
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
 
 import com.atlassian.jira.util.json.JSONException;
 import com.atlassian.jira.util.json.JSONObject;

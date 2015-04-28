@@ -1,4 +1,4 @@
-package ru.andreymarkelov.atlas.plugins.requestedfiedls;
+package ru.andreymarkelov.atlas.plugins.requestedfiedls.model;
 
 import java.util.List;
 
@@ -32,7 +32,6 @@ public class HttpRunnerData {
     }
 
     @Override
-    
     public String toString() {
         return "HttpRunnerData[vals=" + vals + ", error=" + error + ", rawData=" + rawData + "]";
     }

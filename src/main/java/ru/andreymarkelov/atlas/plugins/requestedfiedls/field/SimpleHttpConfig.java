@@ -1,10 +1,13 @@
-package ru.andreymarkelov.atlas.plugins.requestedfiedls;
+package ru.andreymarkelov.atlas.plugins.requestedfiedls.field;
 
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
 
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.Issue;
@@ -17,9 +20,7 @@ public class SimpleHttpConfig implements FieldConfigItemType {
     private static final Logger logger = Logger.getLogger(SimpleHttpConfig.class);
 
     private final TemplateRenderer renderer;
-
     private final PluginData pluginData;
-
     private final boolean isXmlField;
 
     public SimpleHttpConfig(TemplateRenderer renderer, PluginData pluginData, boolean isXmlField) {
@@ -77,9 +78,10 @@ public class SimpleHttpConfig implements FieldConfigItemType {
             parms.put("reqPath", data.getReqPath());
             parms.put("isXmlField", isXmlField);
         }
+
         StringWriter sw = new StringWriter();
         try {
-            renderer.render("/templates/requestedfields/view-config.vm", parms, sw);
+            renderer.render("/ru/andreymarkelov/atlas/plugins/requestedfiedls/templates/action/view-config.vm", parms, sw);
         } catch (Exception e) {
             logger.error("Render exception", e);
             sw.append("Render exception");
