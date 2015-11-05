@@ -1,14 +1,14 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls.action;
 
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
-
 import com.atlassian.jira.config.managedconfiguration.ManagedConfigurationItemService;
 import com.atlassian.jira.permission.GlobalPermissionKey;
 import com.atlassian.jira.security.GlobalPermissionManager;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.security.xsrf.RequiresXsrfCheck;
 import com.atlassian.jira.web.action.admin.customfields.AbstractEditConfigurationItemAction;
+
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
 
 public class EditConfiguration extends AbstractEditConfigurationItemAction {
     private static final long serialVersionUID = -4644319955468389371L;
@@ -53,7 +53,7 @@ public class EditConfiguration extends AbstractEditConfigurationItemAction {
     @Override
     @RequiresXsrfCheck
     protected String doExecute() throws Exception {
-        if (!globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, getLoggedInApplicationUser())) {
+        if (!globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, getLoggedInUser())) {
             return "securitybreach";
         }
 
@@ -65,11 +65,15 @@ public class EditConfiguration extends AbstractEditConfigurationItemAction {
     @Override
     protected void doValidation() {
         if (url ==null || url.length() == 0) {
-            addErrorMessage(authenticationContext.getI18nHelper().getText("requestedfields.config.error.url"));
+            addError("url", authenticationContext.getI18nHelper().getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.url.error.empty"));
         }
 
         if (reqPath ==null || reqPath.length() == 0) {
-            addErrorMessage(authenticationContext.getI18nHelper().getText(isXmlField() ? "requestedfields.config.error.reqPathXML" : "requestedfields.config.error.reqPathJSON"));
+            addError(
+                    "reqPath",
+                    authenticationContext.getI18nHelper().getText(isXmlField() ?
+                            "ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.xml.error.empty" :
+                            "ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.json.error.empty"));
         }
     }
 

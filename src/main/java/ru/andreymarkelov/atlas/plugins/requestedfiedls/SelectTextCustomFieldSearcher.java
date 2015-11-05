@@ -49,7 +49,7 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
             JqlOperandResolver jqlOperandResolver,
             CustomFieldInputHelper customFieldInputHelper,
             FieldVisibilityManager fieldVisibilityManager) {
-        super(jqlOperandResolver, customFieldInputHelper);
+        super(jqlOperandResolver, customFieldInputHelper, fieldVisibilityManager);
         this.customFieldInputHelper = customFieldInputHelper;
         this.fieldVisibilityManager = fieldVisibilityManager;
     }
@@ -82,11 +82,11 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
         };
     }
 
-    public StatisticsMapper getStatisticsMapper(CustomField customField) {
+    public StatisticsMapper<?> getStatisticsMapper(CustomField customField) {
         return new AbstractCustomFieldStatisticsMapper(customField) {
             @Override
-            public Comparator getComparator() {
-                return new Comparator() {
+            public Comparator<?> getComparator() {
+                return new Comparator<Object>() {
                     public int compare(Object o1, Object o2) {
                         if (o1 == null && o2 == null) {
                             return 0;

@@ -1,22 +1,63 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls.util;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.List;
 
-import org.apache.commons.codec.binary.Base64;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
+import org.apache.http.StatusLine;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.ssl.TrustStrategy;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class HttpSender {
-    /**
-     * Logger.
-     */
     private static Logger log = LoggerFactory.getLogger(HttpSender.class);
+
+    private static SSLContext createSslContext() {
+        try {
+            return new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+                public boolean isTrusted(X509Certificate[] x509Certificates, String authType) throws CertificateException {
+                    return true;
+                }
+            }).build();
+        } catch (NoSuchAlgorithmException e) {
+            log.error("Error creating SSL context", e);
+            throw new RuntimeException("Error creating SSL context. No such algorithm.");
+        } catch (KeyManagementException e) {
+            log.error("Error creating SSL context", e);
+            throw new RuntimeException("Error creating SSL context. Key manager exception.");
+        } catch (KeyStoreException e) {
+            log.error("Error creating SSL context", e);
+            throw new RuntimeException("Error creating SSL context. Keystore exception.");
+        }
+    }
 
     /**
      * Binding URL.
@@ -55,49 +96,33 @@ public class HttpSender {
     }
 
     public String call(String data) {
-        StringBuilder infWebSvcReplyString = new StringBuilder();
+        SSLContext sslContext = createSslContext();
+        HostnameVerifier hostnameVerifier = NoopHostnameVerifier.INSTANCE;
+        SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext, hostnameVerifier);
+
+        Header headerContent = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/" + reqDataType);
+        Header headerAccept = new BasicHeader(HttpHeaders.ACCEPT, "application/" + reqDataType);
+        List<Header> headers = Arrays.asList(headerContent, headerAccept);
+
+        HttpClientBuilder httpClientBuilder = HttpClients.custom()
+            .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+            .setSSLSocketFactory(sslSocketFactory)
+            .setDefaultHeaders(headers);
+        if (StringUtils.isNotBlank(user) && StringUtils.isNotBlank(password)) {
+            CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(user, password));
+            httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+        }
+        HttpUriRequest request = type.equals("POST") ? new HttpPost(bindingUrl) : new HttpGet(bindingUrl);
 
         try {
-            URL url = new URL(bindingUrl);
-            HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-            httpConn.setDoOutput(isPost());
-            httpConn.setDoInput(true);
-            httpConn.setAllowUserInteraction(true);
-            httpConn.setRequestMethod(type);
-            httpConn.setRequestProperty("Host", url.getHost());
-            httpConn.setRequestProperty("Content-Type","application/" + reqDataType + "; charset=utf-8");
-            httpConn.setRequestProperty("Accept","application/" + reqDataType);
-            if (isAuth()) {
-                httpConn.setRequestProperty("Authorization", "Basic " + getAuthRealm());
-            }
-            if (isPost() && data != null && data.length() > 0) {
-                OutputStreamWriter out = new OutputStreamWriter(httpConn.getOutputStream());
-                out.write(data);
-                out.flush();
-                out.close();
-            }
+            CloseableHttpResponse httpResponse = httpClientBuilder.build().execute(request, new BasicHttpContext());
 
-            int rc = httpConn.getResponseCode();
-            if (rc != HttpURLConnection.HTTP_OK) {
-                BufferedReader in = new BufferedReader(new InputStreamReader(httpConn.getErrorStream(), "UTF-8"));
-                String line;
-                while ((line = in.readLine()) != null) {
-                    infWebSvcReplyString.append(line);
-                }
-                in.close();
-                httpConn.disconnect();
-
-                log.error("");
-                throw new RuntimeException(infWebSvcReplyString.toString());
-            }
-            else {
-                BufferedReader in = new BufferedReader(new InputStreamReader(httpConn.getInputStream(), "UTF-8"));
-                String line;
-                while ((line = in.readLine()) != null) {
-                    infWebSvcReplyString.append(line);
-                }
-                in.close();
-                httpConn.disconnect();
+            StatusLine statusLine = httpResponse.getStatusLine();
+            if (statusLine.getStatusCode() >= 200 && statusLine.getStatusCode() < 300) {
+                return EntityUtils.toString(httpResponse.getEntity());
+            } else {
+                throw new RuntimeException(EntityUtils.toString(httpResponse.getEntity()));
             }
         }
         catch (MalformedURLException mex) {
@@ -107,23 +132,5 @@ public class HttpSender {
             log.error("HttpSender::call - I/O errro occurred", e);
             throw new RuntimeException(e);
         }
-
-        return infWebSvcReplyString.toString();
-    }
-
-    /**
-     * Get auth realm.
-     */
-    private String getAuthRealm() {
-        Base64 base64 = new Base64(9999);
-        return base64.encodeToString(user.concat(":").concat(password).getBytes());
-    }
-
-    private boolean isAuth() {
-        return (user != null && user.length() > 0) && (password != null && password.length() > 0);
-    }
-
-    private boolean isPost() {
-        return type.equals("POST");
     }
 }

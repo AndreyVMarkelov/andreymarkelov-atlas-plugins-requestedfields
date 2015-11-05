@@ -23,9 +23,9 @@ public class JsonHttpRunner {
         this.defValue = defValue;
     }
 
+    @SuppressWarnings("unchecked")
     public HttpRunnerData getData() {
         HttpRunnerData res = new HttpRunnerData();
-
         try {
             HttpSender httpService = new HttpSender(data.getUrl(), data.getReqType(), data.getReqDataType(), data.getUser(), data.getPassword());
             String json = httpService.call(data.getReqData());

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.andreymarkelov.atlas.plugins</groupId>
     <artifactId>requestedfields</artifactId>
-    <version>1.1.9</version>
+    <version>1.2.0</version>
     <packaging>atlassian-plugin</packaging>
 
     <organization>
@@ -69,6 +69,12 @@
             <version>1.1.1</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.4.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -92,17 +98,17 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
     <properties>
-        <jira.version.rest>6.3</jira.version.rest>
-        <jira.version>6.3</jira.version>
-        <amps.version>5.0.13</amps.version>
+        <jira.version.rest>7.0.0</jira.version.rest>
+        <jira.version>7.0.0</jira.version>
+        <amps.version>6.1.0</amps.version>
         <useFastdevCli>false</useFastdevCli>
     </properties>
 </project>

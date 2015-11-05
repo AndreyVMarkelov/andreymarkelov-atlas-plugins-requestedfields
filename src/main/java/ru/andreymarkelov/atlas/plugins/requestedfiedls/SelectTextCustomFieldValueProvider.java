@@ -17,10 +17,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.util.HttpSender;
-
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.customfields.CustomFieldType;
 import com.atlassian.jira.issue.customfields.CustomFieldValueProvider;
@@ -29,6 +25,10 @@ import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.atlassian.jira.issue.transport.FieldValuesHolder;
 import com.nebhale.jsonpath.JsonPath;
+
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.util.HttpSender;
 
 public class SelectTextCustomFieldValueProvider implements CustomFieldValueProvider {
     private List<FieldConfig> configs;
@@ -41,6 +41,7 @@ public class SelectTextCustomFieldValueProvider implements CustomFieldValueProvi
         this.pluginData = ComponentAccessor.getOSGiComponentInstanceOfType(PluginData.class);
     }
 
+    @SuppressWarnings("unchecked")
     private List<String> getJsonData(JSONFieldData data) {
         try {
             HttpSender httpService = new HttpSender(data.getUrl(), data.getReqType(), data.getReqDataType(), data.getUser(), data.getPassword());
@@ -76,7 +77,7 @@ public class SelectTextCustomFieldValueProvider implements CustomFieldValueProvi
     }
 
     public Object getValue(CustomField customField, FieldValuesHolder fieldValuesHolder) {
-        CustomFieldType customFieldType = customField.getCustomFieldType();
+        CustomFieldType<?, ?> customFieldType = customField.getCustomFieldType();
         final CustomFieldParams customFieldParams = customField.getCustomFieldValues(fieldValuesHolder);
         return customFieldType.getValueFromCustomFieldParams(customFieldParams);
     }

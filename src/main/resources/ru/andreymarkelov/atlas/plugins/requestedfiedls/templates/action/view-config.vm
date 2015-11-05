@@ -1,34 +1,35 @@
 #if($url)
-<table style="border: 1px solid black;">
-    <tr>
-        <td>$i18n.getText('requestedfields.config.url')</td>
-        <td>$url</td>
-    </tr>
+<form action="EditRequestFieldConfig.jspa" method="post" class="aui">
+    <input type="hidden" name="atl_token" value="${atl_token}"/>
+    <div class="field-group">
+        <label for="url">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.url"):</label>
+        <span id="url" class="field-value">$url</span>
+    </div>
     #if($user != "")
-    <tr>
-        <td>$i18n.getText('requestedfields.config.user')</td>
-        <td>$user</td>
-    </tr>
+    <div class="field-group">
+        <label for="user">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.user"):</label>
+        <span id="user" class="field-value">$user</span>
+    </div>
     #end
-    #if($password != "")
-    <tr>
-        <td>$i18n.getText('requestedfields.config.password')</td>
-        <td>*****</td>
-    </tr>
-    #end
-    <tr>
-        <td>$i18n.getText('requestedfields.config.reqtype')</td>
-        <td>$reqType</td>
-    </tr>
+    <div class="field-group">
+        <label for="reqType">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqtype"):</label>
+        <span id="reqType" class="field-value">$reqType</span>
+    </div>
     #if($reqData != "")
-    <tr>
-        <td>$i18n.getText('requestedfields.config.reqdata')</td>
-        <td>$reqData</td>
-    </tr>
+    <div class="field-group">
+        <label for="reqData">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata"):</label>
+        <span id="reqData" class="field-value">$reqData</span>
+    </div>
     #end
-    <tr>
-        <td>#if($isXmlField)${i18n.getText('requestedfields.config.reqPathXML')}:#else${i18n.getText('requestedfields.config.reqPathJSON')}:#end</td>
-        <td>$reqPath</td>
-    </tr>
-</table>
+    <div class="field-group">
+        <label for="reqPath">
+            #if($isXmlField)
+            ${i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.xml')}:
+            #else
+            ${i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.json')}:
+            #end
+        </label>
+        <span id="reqPath" class="field-value">$reqPath</span>
+    </div>
+</form>
 #end

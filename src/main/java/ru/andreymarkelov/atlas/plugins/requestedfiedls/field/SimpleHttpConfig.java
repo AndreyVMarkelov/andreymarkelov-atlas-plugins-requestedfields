@@ -31,7 +31,7 @@ public class SimpleHttpConfig implements FieldConfigItemType {
 
     @Override
     public String getBaseEditUrl() {
-        return "EditCurrencyConfig!default.jspa";
+        return "EditRequestFieldConfig!default.jspa";
     }
 
     @Override
