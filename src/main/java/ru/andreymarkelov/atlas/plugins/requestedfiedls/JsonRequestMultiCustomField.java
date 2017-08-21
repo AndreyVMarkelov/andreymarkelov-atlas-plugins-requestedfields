@@ -1,9 +1,5 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.customfields.impl.GenericTextCFType;
 import com.atlassian.jira.issue.customfields.manager.GenericConfigManager;
@@ -17,10 +13,14 @@ import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.util.json.JSONArray;
 import com.atlassian.jira.util.json.JSONException;
 import com.atlassian.templaterenderer.TemplateRenderer;
-
 import ru.andreymarkelov.atlas.plugins.requestedfiedls.field.SimpleHttpConfig;
 import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
 import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.util.JsonHttpRunner;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class JsonRequestMultiCustomField extends GenericTextCFType {
     private final PluginData pluginData;
@@ -57,23 +57,19 @@ public class JsonRequestMultiCustomField extends GenericTextCFType {
     }
 
     @Override
-    public Map<String, Object> getVelocityParameters(
-            final Issue issue,
-            final CustomField field,
-            final FieldLayoutItem fieldLayoutItem) {
-        final Map<String, Object> map = super.getVelocityParameters(issue, field, fieldLayoutItem);
-
+    public Map<String, Object> getVelocityParameters(Issue issue, CustomField customField, FieldLayoutItem fieldLayoutItem) {
+        Map<String, Object> map = super.getVelocityParameters(issue, customField, fieldLayoutItem);
         if (issue == null) {
             return map;
         }
 
-        map.put("list", parseData(field.getValue(issue)));
-        FieldConfig fieldConfig = field.getRelevantConfig(issue);
+        map.put("list", parseData(customField.getValue(issue)));
+
+        FieldConfig fieldConfig = customField.getRelevantConfig(issue);
         if (fieldConfig != null) {
             JSONFieldData data = pluginData.getJSONFieldData(fieldConfig);
             if (data != null) {
-                JsonHttpRunner runner = new JsonHttpRunner(data, field.getDefaultValue(issue));
-                map.put("runner", runner);
+                map.put("runner", new JsonHttpRunner(data, customField.getDefaultValue(issue)));
             } else {
                 map.put("notconfigured", Boolean.TRUE);
             }
@@ -83,7 +79,7 @@ public class JsonRequestMultiCustomField extends GenericTextCFType {
     }
 
     private List<String> parseData(Object obj) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
 
         if (obj != null) {
             try {

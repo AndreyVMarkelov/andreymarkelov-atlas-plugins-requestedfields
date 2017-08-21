@@ -1,10 +1,5 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import com.atlassian.jira.ComponentManager;
 import com.atlassian.jira.issue.customfields.searchers.ExactTextSearcher;
 import com.atlassian.jira.issue.customfields.searchers.information.CustomFieldSearcherInformation;
@@ -26,14 +21,17 @@ import com.atlassian.jira.jql.operand.JqlOperandResolver;
 import com.atlassian.jira.web.FieldVisibilityManager;
 import com.atlassian.util.concurrent.atomic.AtomicReference;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements CustomFieldStattable {
     private static class SortStringComparator implements Comparator<String> {
         public int compare(String s, String s1) {
             return s.compareTo(s1);
         }
     }
-
-    private CustomField customField;
 
     private CustomFieldInputHelper customFieldInputHelper;
 
@@ -55,7 +53,7 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
     }
 
     private List<FieldConfig> getConfigs(CustomField field) {
-        List<FieldConfig> configs = new ArrayList<FieldConfig>();
+        List<FieldConfig> configs = new ArrayList<>();
         for (FieldConfigScheme cs : field.getConfigurationSchemes()) {
             configs.addAll(cs.getConfigs().values());
         }
@@ -86,18 +84,16 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
         return new AbstractCustomFieldStatisticsMapper(customField) {
             @Override
             public Comparator<?> getComparator() {
-                return new Comparator<Object>() {
-                    public int compare(Object o1, Object o2) {
-                        if (o1 == null && o2 == null) {
-                            return 0;
-                        } else if (o1 == null) {
-                            return 1;
-                        } else if (o2 == null) {
-                            return -1;
-                        }
-
-                        return ((String) o1).compareTo((String) o2);
+                return (Comparator<Object>) (o1, o2) -> {
+                    if (o1 == null && o2 == null) {
+                        return 0;
+                    } else if (o1 == null) {
+                        return 1;
+                    } else if (o2 == null) {
+                        return -1;
                     }
+
+                    return ((String) o1).compareTo((String) o2);
                 };
             }
 
@@ -122,9 +118,7 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
 
     @Override
     public void init(CustomField field) {
-        customField = field;
-
-        ClauseNames clauseNames = customField.getClauseNames();
+        ClauseNames clauseNames = field.getClauseNames();
         final FieldIndexer indexer = new SimpleListIndexer(fieldVisibilityManager, field);
         FieldVisibilityManager fieldVisibilityManager = ComponentManager.getComponentInstanceOfType(FieldVisibilityManager.class);
 
@@ -133,8 +127,8 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
         searcherInformation = new CustomFieldSearcherInformation(
                 field.getId(),
                 field.getNameKey(),
-                Collections.<FieldIndexer>singletonList(indexer),
-                new AtomicReference<CustomField>(field));
+                Collections.singletonList(indexer),
+                new AtomicReference<>(field));
         searchInputTransformer = new ExactTextCustomFieldSearchInputTransformer(
                 field,
                 clauseNames,
@@ -143,10 +137,9 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
         searchRenderer = new SelectTextCustomFieldRenderer(
             clauseNames,
             getDescriptor(),
-            customField,
+            field,
             new SelectTextCustomFieldValueProvider(getConfigs(field), isXmlField),
             fieldVisibilityManager);
-
         super.init(field);
     }
 }

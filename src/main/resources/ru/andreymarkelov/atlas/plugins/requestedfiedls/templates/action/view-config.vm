@@ -3,22 +3,28 @@
     <input type="hidden" name="atl_token" value="${atl_token}"/>
     <div class="field-group">
         <label for="url">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.url"):</label>
-        <span id="url" class="field-value">$url</span>
+        <span id="url" class="field-value">${url}</span>
     </div>
     #if($user != "")
     <div class="field-group">
         <label for="user">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.user"):</label>
-        <span id="user" class="field-value">$user</span>
+        <span id="user" class="field-value">${user}</span>
     </div>
     #end
     <div class="field-group">
         <label for="reqType">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqtype"):</label>
-        <span id="reqType" class="field-value">$reqType</span>
+        <span id="reqType" class="field-value">${reqType}</span>
     </div>
+    #if($reqHeaders != "")
+    <div class="field-group">
+        <label for="reqHeaders">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.headers"):</label>
+        <span id="reqHeaders" class="field-value">${reqHeaders}</span>
+    </div>
+    #end
     #if($reqData != "")
     <div class="field-group">
         <label for="reqData">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata"):</label>
-        <span id="reqData" class="field-value">$reqData</span>
+        <span id="reqData" class="field-value">${reqData}</span>
     </div>
     #end
     <div class="field-group">
@@ -29,7 +35,7 @@
             ${i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.json')}:
             #end
         </label>
-        <span id="reqPath" class="field-value">$reqPath</span>
+        <span id="reqPath" class="field-value">${reqPath}</span>
     </div>
 </form>
 #end

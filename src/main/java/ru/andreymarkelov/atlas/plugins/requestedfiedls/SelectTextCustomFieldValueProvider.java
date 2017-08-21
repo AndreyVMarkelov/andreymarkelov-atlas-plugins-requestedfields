@@ -1,23 +1,5 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 
-import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathFactory;
-
-import org.apache.commons.lang.StringUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.customfields.CustomFieldType;
 import com.atlassian.jira.issue.customfields.CustomFieldValueProvider;
 import com.atlassian.jira.issue.customfields.view.CustomFieldParams;
@@ -25,10 +7,26 @@ import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.atlassian.jira.issue.transport.FieldValuesHolder;
 import com.nebhale.jsonpath.JsonPath;
-
+import org.apache.commons.lang.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
 import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
 import ru.andreymarkelov.atlas.plugins.requestedfiedls.util.HttpSender;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static com.atlassian.jira.component.ComponentAccessor.getOSGiComponentInstanceOfType;
 
 public class SelectTextCustomFieldValueProvider implements CustomFieldValueProvider {
     private List<FieldConfig> configs;
@@ -38,42 +36,42 @@ public class SelectTextCustomFieldValueProvider implements CustomFieldValueProvi
     public SelectTextCustomFieldValueProvider(List<FieldConfig> configs, boolean isXmlField) {
         this.configs = configs;
         this.isXmlField = isXmlField;
-        this.pluginData = ComponentAccessor.getOSGiComponentInstanceOfType(PluginData.class);
+        this.pluginData = getOSGiComponentInstanceOfType(PluginData.class);
     }
 
     @SuppressWarnings("unchecked")
     private List<String> getJsonData(JSONFieldData data) {
         try {
             HttpSender httpService = new HttpSender(data.getUrl(), data.getReqType(), data.getReqDataType(), data.getUser(), data.getPassword());
-            String json = httpService.call(data.getReqData());
+            String json = httpService.call(data.getReqHeaders(), data.getReqData());
 
             JsonPath namePath = JsonPath.compile(data.getReqPath());
-            List<String> vals = namePath.read(json, List.class);
-            if (vals != null) {
-                if (!vals.isEmpty()) {
-                    Collections.sort(vals);
+            List<String> values = namePath.read(json, List.class);
+            if (values != null) {
+                if (!values.isEmpty()) {
+                    Collections.sort(values);
                 }
             }
 
-            return vals;
+            return values;
         } catch (Throwable th) {
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
     }
 
     public List<String> getStringValue(CustomField customField, FieldValuesHolder fieldValuesHolder) {
-        List<String> vals = new ArrayList<String>();
+        List<String> values = new ArrayList<>();
         for (FieldConfig fieldConfig : configs) {
             JSONFieldData data = pluginData.getJSONFieldData(fieldConfig);
             if (data != null) {
                 if (isXmlField) {
-                    vals.addAll(getXmlData(data));
+                    values.addAll(getXmlData(data));
                 } else {
-                    vals.addAll(getJsonData(data));
+                    values.addAll(getJsonData(data));
                 }
             }
         }
-        return vals;
+        return values;
     }
 
     public Object getValue(CustomField customField, FieldValuesHolder fieldValuesHolder) {
@@ -85,9 +83,9 @@ public class SelectTextCustomFieldValueProvider implements CustomFieldValueProvi
     private List<String> getXmlData(JSONFieldData data) {
         try {
             HttpSender httpService = new HttpSender(data.getUrl(), data.getReqType(), data.getReqDataType(), data.getUser(), data.getPassword());
-            String xml = httpService.call(data.getReqData());
+            String xml = httpService.call(data.getReqHeaders(), data.getReqData());
 
-            List<String> vals = new ArrayList<String>();
+            List<String> values = new ArrayList<>();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -102,20 +100,20 @@ public class SelectTextCustomFieldValueProvider implements CustomFieldValueProvi
                 if (node.getNodeType() == Node.TEXT_NODE) {
                     String nodeText = node.getTextContent();
                     if (!StringUtils.isEmpty(nodeText)) {
-                        vals.add(nodes.item(i).getNodeValue());
+                        values.add(nodes.item(i).getNodeValue());
                     }
                 }
             }
 
-            if (vals != null) {
-                if (!vals.isEmpty()) {
-                    Collections.sort(vals);
+            if (values != null) {
+                if (!values.isEmpty()) {
+                    Collections.sort(values);
                 }
             }
 
-            return vals;
+            return values;
         } catch (Throwable th) {
-            return new ArrayList<String>();
+            return new ArrayList<>();
         }
     }
 }

@@ -1,16 +1,13 @@
-package ru.andreymarkelov.atlas.plugins.requestedfiedls;
+package ru.andreymarkelov.atlas.plugins.requestedfiedls.util;
+
+import com.nebhale.jsonpath.JsonPath;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.HttpRunnerData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
 
 import java.util.Collections;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.HttpRunnerData;
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.util.HttpSender;
-
-import com.nebhale.jsonpath.JsonPath;
 
 public class JsonHttpRunner {
     private static final Logger log = LoggerFactory.getLogger(JsonHttpRunner.class);
@@ -28,20 +25,20 @@ public class JsonHttpRunner {
         HttpRunnerData res = new HttpRunnerData();
         try {
             HttpSender httpService = new HttpSender(data.getUrl(), data.getReqType(), data.getReqDataType(), data.getUser(), data.getPassword());
-            String json = httpService.call(data.getReqData());
+            String json = httpService.call(data.getReqHeaders(), data.getReqData());
             JsonPath namePath = JsonPath.compile(data.getReqPath());
-            List<String> vals = namePath.read(json, List.class);
+            List<String> values = namePath.read(json, List.class);
 
             if (defValue != null) {
-                vals.add(0, defValue.toString());
+                values.add(0, defValue.toString());
             }
 
             res.setRawData(json);
-            if (vals != null) {
-                if (!vals.isEmpty()) {
-                    Collections.sort(vals);
+            if (values != null) {
+                if (!values.isEmpty()) {
+                    Collections.sort(values);
                 }
-                res.setVals(vals);
+                res.setVals(values);
             }
         } catch (Throwable th) {
             log.error("JsonHttpRunner::getData - error renderring", th);

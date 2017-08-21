@@ -1,14 +1,16 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls.action;
 
 import com.atlassian.jira.config.managedconfiguration.ManagedConfigurationItemService;
-import com.atlassian.jira.permission.GlobalPermissionKey;
 import com.atlassian.jira.security.GlobalPermissionManager;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.security.xsrf.RequiresXsrfCheck;
 import com.atlassian.jira.web.action.admin.customfields.AbstractEditConfigurationItemAction;
-
 import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
 import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
+
+import static com.atlassian.jira.permission.GlobalPermissionKey.ADMINISTER;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class EditConfiguration extends AbstractEditConfigurationItemAction {
     private static final long serialVersionUID = -4644319955468389371L;
@@ -21,6 +23,7 @@ public class EditConfiguration extends AbstractEditConfigurationItemAction {
     private String user;
     private String password;
     private String reqType;
+    private String reqHeaders;
     private String reqData;
     private String reqPath;
 
@@ -43,37 +46,50 @@ public class EditConfiguration extends AbstractEditConfigurationItemAction {
             this.user = data.getUser();
             this.password = data.getPassword();
             this.reqType = data.getReqType();
+            this.reqHeaders = data.getReqHeaders();
             this.reqData = data.getReqData();
             this.reqPath = data.getReqPath();
         }
-
         return INPUT;
     }
 
     @Override
     @RequiresXsrfCheck
     protected String doExecute() throws Exception {
-        if (!globalPermissionManager.hasPermission(GlobalPermissionKey.ADMINISTER, getLoggedInUser())) {
+        if (!globalPermissionManager.hasPermission(ADMINISTER, getLoggedInUser())) {
             return "securitybreach";
         }
 
-        String reqDataType = isXmlField() ? "xml" : "json";
-        pluginData.storeJSONFieldData(getFieldConfig(), new JSONFieldData(url, user, password, reqType, reqDataType, reqData, reqPath));
+        pluginData.storeJSONFieldData(
+                getFieldConfig(),
+                new JSONFieldData(url, user, password, reqType, reqHeaders, isXmlField() ? "xml" : "json", reqData, reqPath)
+        );
         return getRedirect("/secure/admin/ConfigureCustomField!default.jspa?customFieldId=" + getFieldConfig().getCustomField().getIdAsLong().toString());
     }
 
     @Override
     protected void doValidation() {
-        if (url ==null || url.length() == 0) {
+        super.doValidation();
+
+        if (isBlank(url)) {
             addError("url", authenticationContext.getI18nHelper().getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.url.error.empty"));
         }
 
-        if (reqPath ==null || reqPath.length() == 0) {
+        if (isBlank(reqPath)) {
             addError(
                     "reqPath",
                     authenticationContext.getI18nHelper().getText(isXmlField() ?
                             "ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.xml.error.empty" :
                             "ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.json.error.empty"));
+        }
+
+        if (isNotBlank(reqHeaders)) {
+            String[] headerLines = reqHeaders.split("\\r?\\n");
+            for (String headerLine : headerLines) {
+                if (!headerLine.contains("=")) {
+                    addError("reqHeaders", authenticationContext.getI18nHelper().getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.headers.error.format"));
+                }
+            }
         }
     }
 
@@ -128,5 +144,13 @@ public class EditConfiguration extends AbstractEditConfigurationItemAction {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public String getReqHeaders() {
+        return reqHeaders;
+    }
+
+    public void setReqHeaders(String reqHeaders) {
+        this.reqHeaders = reqHeaders;
     }
 }

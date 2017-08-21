@@ -33,6 +33,10 @@ public class HttpRunnerData {
 
     @Override
     public String toString() {
-        return "HttpRunnerData[vals=" + vals + ", error=" + error + ", rawData=" + rawData + "]";
+        return "HttpRunnerData{" +
+                "vals=" + vals +
+                ", error='" + error + '\'' +
+                ", rawData='" + rawData + '\'' +
+                '}';
     }
 }

@@ -1,14 +1,15 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls.manager;
 
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.util.JSONFieldDataTranslator;
-
 import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
+
+import static ru.andreymarkelov.atlas.plugins.requestedfiedls.util.JSONFieldDataTranslator.JSONFieldDataFromString;
+import static ru.andreymarkelov.atlas.plugins.requestedfiedls.util.JSONFieldDataTranslator.JSONFieldDataToString;
 
 public class PluginDataImpl implements PluginData {
-    private final String PLUGIN_KEY = "RequestedFields";
+    private static final String PLUGIN_KEY = "RequestedFields";
 
     private final PluginSettings pluginSettings;
 
@@ -19,23 +20,19 @@ public class PluginDataImpl implements PluginData {
     @Override
     public JSONFieldData getJSONFieldData(FieldConfig config) {
         Object obj = getPluginSettings().get(getKey(config));
-        if (obj != null) {
-            return JSONFieldDataTranslator.JSONFieldDataFromString(obj.toString());
-        } else {
-            return null;
-        }
+        return obj != null ? JSONFieldDataFromString(obj.toString()) : null;
     }
 
     private String getKey(FieldConfig config) {
         return config.getFieldId().concat("_").concat(config.getId().toString()).concat("_").concat("config");
     }
 
-    private synchronized PluginSettings getPluginSettings() {
-        return pluginSettings;
-    }
-
     @Override
     public void storeJSONFieldData(FieldConfig config, JSONFieldData data) {
-        getPluginSettings().put(getKey(config), JSONFieldDataTranslator.JSONFieldDataToString(data));
+        getPluginSettings().put(getKey(config), JSONFieldDataToString(data));
+    }
+
+    private synchronized PluginSettings getPluginSettings() {
+        return pluginSettings;
     }
 }

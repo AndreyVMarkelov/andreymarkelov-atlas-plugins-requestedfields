@@ -1,9 +1,12 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls.util;
 
-import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.HttpRunnerData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -11,16 +14,12 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
+import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.HttpRunnerData;
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
+import static org.apache.commons.lang.StringUtils.isEmpty;
 
 public class XmlHttpRunner {
     private static final Logger log = LoggerFactory.getLogger(XmlHttpRunner.class);
@@ -38,9 +37,9 @@ public class XmlHttpRunner {
 
         try {
             HttpSender httpService = new HttpSender(data.getUrl(), data.getReqType(), data.getReqDataType(), data.getUser(), data.getPassword());
-            String xml = httpService.call(data.getReqData());
+            String xml = httpService.call(data.getReqHeaders(), data.getReqData());
 
-            List<String> vals = new ArrayList<String>();
+            List<String> values = new ArrayList<>();
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -54,22 +53,22 @@ public class XmlHttpRunner {
                 Node node = nodes.item(i);
                 if (node.getNodeType() == Node.TEXT_NODE) {
                     String nodeText = node.getTextContent();
-                    if (!StringUtils.isEmpty(nodeText)) {
-                        vals.add(nodes.item(i).getNodeValue());
+                    if (!isEmpty(nodeText)) {
+                        values.add(nodes.item(i).getNodeValue());
                     }
                 }
             }
 
             if (defValue != null) {
-                vals.add(0, defValue.toString());
+                values.add(0, defValue.toString());
             }
 
             res.setRawData(xml);
-            if (vals != null) {
-                if (!vals.isEmpty()) {
-                    Collections.sort(vals);
+            if (values != null) {
+                if (!values.isEmpty()) {
+                    Collections.sort(values);
                 }
-                res.setVals(vals);
+                res.setVals(values);
             }
         } catch (Throwable th) {
             log.error("XmlHttpRunner::getData - error renderring", th);

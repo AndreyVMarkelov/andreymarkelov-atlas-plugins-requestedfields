@@ -56,19 +56,25 @@
             <div class="field-group">
                 <label for="url">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.url")<span class="aui-icon icon-required"/></label>
                 <input type="text" class="text long-field" name="url" id="url" value="$!{action.getUrl()}"/>
-                #if($action.getErrors().containsKey("url"))<div class="error">$action.getErrors().get("url")</div>#end
+                #if($action.getErrors().containsKey("url"))
+                <div class="error">$action.getErrors().get("url")</div>
+                #end
                 <div class="description">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.url.desc")</div>
             </div>
             <div class="field-group">
                 <label for="user">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.user")</label>
                 <input type="text" class="text" name="user" id="user" value="$!{action.getUser()}"/>
-                #if($action.getErrors().containsKey("user"))<div class="error">$action.getErrors().get("user")</div>#end
+                #if($action.getErrors().containsKey("user"))
+                <div class="error">$action.getErrors().get("user")</div>
+                #end
                 <div class="description">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.user.desc")</div>
             </div>
             <div class="field-group">
                 <label for="password">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.password")</label>
                 <input type="password" class="password" name="password" id="password" value="$!{action.getPassword()}"/>
-                #if($action.getErrors().containsKey("password"))<div class="error">$action.getErrors().get("password")</div>#end
+                #if($action.getErrors().containsKey("password"))
+                <div class="error">$action.getErrors().get("password")</div>
+                #end
                 <div class="description">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.password.desc")</div>
             </div>
             <div class="field-group">
@@ -77,19 +83,33 @@
                     <option #if($action.getReqType() == "GET")selected="selected"#end value="GET">GET</option>
                     <option #if($action.getReqType() == "POST")selected="selected"#end value="POST">POST</option>
                 </select>
-                #if($action.getErrors().containsKey("reqType"))<div class="error">$action.getErrors().get("reqType")</div>#end
+                #if($action.getErrors().containsKey("reqType"))
+                <div class="error">$action.getErrors().get("reqType")</div>
+                #end
                 <div class="description">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqtype.desc")</div>
+            </div>
+            <div class="field-group">
+                <label for="reqHeaders">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.headers")</label>
+                <textarea class="textarea" name="reqHeaders" id="reqHeaders" cols="120" rows="10">$!{action.getReqHeaders()}</textarea>
+                #if($action.getErrors().containsKey("reqHeaders"))
+                <div class="error">$action.getErrors().get("reqHeaders")</div>
+                #end
+                <div class="description">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.headers.desc")</div>
             </div>
             <div class="field-group">
                 <label for="reqData">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata")</label>
                 <textarea class="textarea" name="reqData" id="reqData" cols="120" rows="10">$!{action.getReqData()}</textarea>
-                #if($action.getErrors().containsKey("reqData"))<div class="error">$action.getErrors().get("reqData")</div>#end
+                #if($action.getErrors().containsKey("reqData"))
+                <div class="error">$action.getErrors().get("reqData")</div>
+                #end
                 <div class="description">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.desc")</div>
             </div>
             <div class="field-group">
                 <label for="reqPath">#if($action.isXmlField())$i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.xml')#else$i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.json')#end<span class="aui-icon icon-required"/></label>
                 <input type="text" class="text long-field" name="reqPath" id="reqPath" value="$!{action.getReqPath()}"/>
-                #if($action.getErrors().containsKey("reqPath"))<div class="error">$action.getErrors().get("reqPath")</div>#end
+                #if($action.getErrors().containsKey("reqPath"))
+                <div class="error">$action.getErrors().get("reqPath")</div>
+                #end
                 <div class="description">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.desc")</div>
             </div>
             <div class="buttons-container">

@@ -1,20 +1,18 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls.field;
 
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
-
 import com.atlassian.jira.component.ComponentAccessor;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.fields.config.FieldConfig;
 import com.atlassian.jira.issue.fields.config.FieldConfigItemType;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutItem;
 import com.atlassian.templaterenderer.TemplateRenderer;
+import org.apache.log4j.Logger;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
+
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SimpleHttpConfig implements FieldConfigItemType {
     private static final Logger logger = Logger.getLogger(SimpleHttpConfig.class);
@@ -36,13 +34,14 @@ public class SimpleHttpConfig implements FieldConfigItemType {
 
     @Override
     public Object getConfigurationObject(Issue issue, FieldConfig config) {
-        Map<String, Object> parms = new HashMap<String, Object>();
+        Map<String, Object> parms = new HashMap<>();
         JSONFieldData data = pluginData.getJSONFieldData(config);
         if (data != null) {
             parms.put("url", data.getUrl());
             parms.put("user", data.getUser());
             parms.put("password", data.getPassword());
             parms.put("reqType", data.getReqType());
+            parms.put("reqHeaders", data.getReqHeaders());
             parms.put("reqData", data.getReqData());
             parms.put("reqPath", data.getReqPath());
         }
@@ -66,7 +65,7 @@ public class SimpleHttpConfig implements FieldConfigItemType {
 
     @Override
     public String getViewHtml(FieldConfig config, FieldLayoutItem fieldLayoutItem) {
-        Map<String, Object> parms = new HashMap<String, Object>();
+        Map<String, Object> parms = new HashMap<>();
         JSONFieldData data = pluginData.getJSONFieldData(config);
         if (data != null) {
             parms.put("i18n", ComponentAccessor.getJiraAuthenticationContext().getI18nHelper());
@@ -74,6 +73,7 @@ public class SimpleHttpConfig implements FieldConfigItemType {
             parms.put("user", data.getUser());
             parms.put("password", data.getPassword());
             parms.put("reqType", data.getReqType());
+            parms.put("reqHeaders", data.getReqHeaders());
             parms.put("reqData", data.getReqData());
             parms.put("reqPath", data.getReqPath());
             parms.put("isXmlField", isXmlField);

@@ -1,12 +1,5 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 
-import static com.atlassian.jira.util.dbc.Assertions.notNull;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import com.atlassian.annotations.PublicApi;
 import com.atlassian.annotations.PublicSpi;
 import com.atlassian.jira.JiraDataTypes;
@@ -38,6 +31,13 @@ import com.atlassian.jira.web.FieldVisibilityManager;
 import com.atlassian.query.operator.Operator;
 import com.atlassian.util.concurrent.atomic.AtomicReference;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import static com.atlassian.jira.util.dbc.Assertions.notNull;
+
 @PublicSpi
 @PublicApi
 public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearcher implements CustomFieldSearcher {
@@ -61,7 +61,7 @@ public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearch
     }
 
     private List<FieldConfig> getConfigs(CustomField field) {
-        List<FieldConfig> configs = new ArrayList<FieldConfig>();
+        List<FieldConfig> configs = new ArrayList<>();
         for (FieldConfigScheme cs : field.getConfigurationSchemes()) {
             configs.addAll(cs.getConfigs().values());
         }
@@ -115,8 +115,8 @@ public class SimpleListSearcher  extends AbstractInitializationCustomFieldSearch
         searcherInformation = new CustomFieldSearcherInformation(
                 field.getId(),
                 field.getNameKey(),
-                Collections.<FieldIndexer>singletonList(indexer),
-                new AtomicReference<CustomField>(field));
+                Collections.singletonList(indexer),
+                new AtomicReference<>(field));
         searchInputTransformer = new ExactTextCustomFieldSearchInputTransformer(
                 field,
                 names,

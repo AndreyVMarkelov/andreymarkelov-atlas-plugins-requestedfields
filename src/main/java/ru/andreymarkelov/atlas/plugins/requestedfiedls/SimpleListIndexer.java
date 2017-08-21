@@ -1,15 +1,16 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
 import com.atlassian.jira.issue.Issue;
 import com.atlassian.jira.issue.fields.CustomField;
 import com.atlassian.jira.issue.index.indexers.impl.AbstractCustomFieldIndexer;
 import com.atlassian.jira.util.json.JSONArray;
 import com.atlassian.jira.util.json.JSONException;
 import com.atlassian.jira.web.FieldVisibilityManager;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SimpleListIndexer extends AbstractCustomFieldIndexer {
 
@@ -43,8 +44,7 @@ public class SimpleListIndexer extends AbstractCustomFieldIndexer {
     }
 
     private List<String> parseData(Object obj) {
-        List<String> list = new ArrayList<String>();
-
+        List<String> list = new ArrayList<>();
         if (obj != null) {
             try {
                 JSONArray jsonArray = new JSONArray(obj.toString());

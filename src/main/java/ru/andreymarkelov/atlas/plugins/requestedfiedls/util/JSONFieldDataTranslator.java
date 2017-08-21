@@ -1,11 +1,9 @@
 package ru.andreymarkelov.atlas.plugins.requestedfiedls.util;
 
-import org.apache.log4j.Logger;
-
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
-
 import com.atlassian.jira.util.json.JSONException;
 import com.atlassian.jira.util.json.JSONObject;
+import org.apache.log4j.Logger;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
 
 public class JSONFieldDataTranslator {
     private static final Logger logger = Logger.getLogger(JSONFieldDataTranslator.class);
@@ -18,6 +16,9 @@ public class JSONFieldDataTranslator {
             data.setUser(jsonObj.getString("user"));
             data.setPassword(jsonObj.getString("password"));
             data.setReqType(jsonObj.getString("reqType"));
+            if (jsonObj.has("reqHeaders")) {
+                data.setReqHeaders(jsonObj.getString("reqHeaders"));
+            }
             data.setReqData(jsonObj.getString("reqData"));
             data.setReqPath(jsonObj.getString("reqPath"));
             data.setReqDataType(jsonObj.getString("reqDataType"));
@@ -35,6 +36,7 @@ public class JSONFieldDataTranslator {
             jsonObj.put("user", obj.getUser());
             jsonObj.put("password", obj.getPassword());
             jsonObj.put("reqType", obj.getReqType());
+            jsonObj.put("reqHeaders", obj.getReqHeaders());
             jsonObj.put("reqData", obj.getReqData());
             jsonObj.put("reqPath", obj.getReqPath());
             jsonObj.put("reqDataType", obj.getReqDataType());

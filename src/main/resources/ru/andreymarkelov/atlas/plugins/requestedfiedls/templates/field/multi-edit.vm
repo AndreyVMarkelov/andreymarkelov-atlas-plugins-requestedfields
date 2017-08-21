@@ -11,9 +11,11 @@
         #if($error)
             <div class="formErrors">$textutils.htmlEncode($!error)</div>
         #else
-            <input id="${customField.id}" name="${customField.id}" type="hidden" #if($value)value="$value"#elsevalue="[]"#end/>
+            <input id="${customField.id}" name="${customField.id}" type="hidden" #if($value) value="$value" #else value="[]" #end/>
             <select class="select" multiple="multiple" size="5" name="${customField.id}-sel" id="${customField.id}-sel">
-                #foreach($val in $vals)<option #if($list.contains($val))selected="selected"#end value="$val">$val</option>#end
+                #foreach($val in $vals)
+                <option #if($list.contains($val))selected="selected"#end value="$val">$val</option>
+                #end
             </select>
             <script language="javascript">
                 jQuery(document).ready(function() {
