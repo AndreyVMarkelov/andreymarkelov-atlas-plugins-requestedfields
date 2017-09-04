@@ -4,7 +4,7 @@ import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
 
 import com.atlassian.jira.issue.fields.config.FieldConfig;
 
-public interface PluginData {
+public interface RequestFieldDataManager {
     JSONFieldData getJSONFieldData(FieldConfig config);
     void storeJSONFieldData(FieldConfig config, JSONFieldData data);
 }

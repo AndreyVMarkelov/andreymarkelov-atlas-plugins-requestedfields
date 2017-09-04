@@ -7,7 +7,7 @@ import com.atlassian.jira.issue.fields.config.FieldConfigItemType;
 import com.atlassian.jira.issue.fields.layout.field.FieldLayoutItem;
 import com.atlassian.templaterenderer.TemplateRenderer;
 import org.apache.log4j.Logger;
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.RequestFieldDataManager;
 import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
 
 import java.io.StringWriter;
@@ -18,12 +18,12 @@ public class SimpleHttpConfig implements FieldConfigItemType {
     private static final Logger logger = Logger.getLogger(SimpleHttpConfig.class);
 
     private final TemplateRenderer renderer;
-    private final PluginData pluginData;
+    private final RequestFieldDataManager requestFieldDataManager;
     private final boolean isXmlField;
 
-    public SimpleHttpConfig(TemplateRenderer renderer, PluginData pluginData, boolean isXmlField) {
+    public SimpleHttpConfig(TemplateRenderer renderer, RequestFieldDataManager requestFieldDataManager, boolean isXmlField) {
         this.renderer = renderer;
-        this.pluginData = pluginData;
+        this.requestFieldDataManager = requestFieldDataManager;
         this.isXmlField = isXmlField;
     }
 
@@ -35,7 +35,7 @@ public class SimpleHttpConfig implements FieldConfigItemType {
     @Override
     public Object getConfigurationObject(Issue issue, FieldConfig config) {
         Map<String, Object> parms = new HashMap<>();
-        JSONFieldData data = pluginData.getJSONFieldData(config);
+        JSONFieldData data = requestFieldDataManager.getJSONFieldData(config);
         if (data != null) {
             parms.put("url", data.getUrl());
             parms.put("user", data.getUser());
@@ -66,7 +66,7 @@ public class SimpleHttpConfig implements FieldConfigItemType {
     @Override
     public String getViewHtml(FieldConfig config, FieldLayoutItem fieldLayoutItem) {
         Map<String, Object> parms = new HashMap<>();
-        JSONFieldData data = pluginData.getJSONFieldData(config);
+        JSONFieldData data = requestFieldDataManager.getJSONFieldData(config);
         if (data != null) {
             parms.put("i18n", ComponentAccessor.getJiraAuthenticationContext().getI18nHelper());
             parms.put("url", data.getUrl());

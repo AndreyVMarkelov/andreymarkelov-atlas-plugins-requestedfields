@@ -12,7 +12,7 @@ import com.atlassian.jira.issue.fields.layout.field.FieldLayoutItem;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.templaterenderer.TemplateRenderer;
 import ru.andreymarkelov.atlas.plugins.requestedfiedls.field.SimpleHttpConfig;
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.RequestFieldDataManager;
 import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
 import ru.andreymarkelov.atlas.plugins.requestedfiedls.util.XmlHttpRunner;
 
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 public class XmlRequestCustomField extends GenericTextCFType  {
-    private final PluginData pluginData;
+    private final RequestFieldDataManager requestFieldDataManager;
     private final TemplateRenderer renderer;
 
     public XmlRequestCustomField(
@@ -28,17 +28,17 @@ public class XmlRequestCustomField extends GenericTextCFType  {
             GenericConfigManager genericConfigManager,
             TextFieldCharacterLengthValidator textFieldCharacterLengthValidator,
             JiraAuthenticationContext jiraAuthenticationContext,
-            PluginData pluginData,
+            RequestFieldDataManager requestFieldDataManager,
             TemplateRenderer renderer) {
         super(customFieldValuePersister, genericConfigManager, textFieldCharacterLengthValidator, jiraAuthenticationContext);
-        this.pluginData = pluginData;
+        this.requestFieldDataManager = requestFieldDataManager;
         this.renderer = renderer;
     }
 
     @Override
     public List<FieldConfigItemType> getConfigurationItemTypes() {
         final List<FieldConfigItemType> configurationItemTypes = super.getConfigurationItemTypes();
-        configurationItemTypes.add(new SimpleHttpConfig(renderer, pluginData, true));
+        configurationItemTypes.add(new SimpleHttpConfig(renderer, requestFieldDataManager, true));
         return configurationItemTypes;
     }
 
@@ -51,7 +51,7 @@ public class XmlRequestCustomField extends GenericTextCFType  {
 
         FieldConfig fieldConfig = customField.getRelevantConfig(issue);
         if (fieldConfig != null) {
-            JSONFieldData data = pluginData.getJSONFieldData(fieldConfig);
+            JSONFieldData data = requestFieldDataManager.getJSONFieldData(fieldConfig);
             if (data != null) {
                 map.put("runner", new XmlHttpRunner(data, customField.getDefaultValue(issue)));
             } else {

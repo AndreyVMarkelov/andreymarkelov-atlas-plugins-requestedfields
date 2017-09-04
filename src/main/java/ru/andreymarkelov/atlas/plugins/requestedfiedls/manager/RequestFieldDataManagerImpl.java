@@ -8,12 +8,12 @@ import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
 import static ru.andreymarkelov.atlas.plugins.requestedfiedls.util.JSONFieldDataTranslator.JSONFieldDataFromString;
 import static ru.andreymarkelov.atlas.plugins.requestedfiedls.util.JSONFieldDataTranslator.JSONFieldDataToString;
 
-public class PluginDataImpl implements PluginData {
+public class RequestFieldDataManagerImpl implements RequestFieldDataManager {
     private static final String PLUGIN_KEY = "RequestedFields";
 
     private final PluginSettings pluginSettings;
 
-    public PluginDataImpl(PluginSettingsFactory pluginSettingsFactory) {
+    public RequestFieldDataManagerImpl(PluginSettingsFactory pluginSettingsFactory) {
         this.pluginSettings = pluginSettingsFactory.createSettingsForKey(PLUGIN_KEY);
     }
 

@@ -28,15 +28,15 @@
     <webwork1 key="requestedfields-configaction" name="Request custom fields configuration action" class="java.lang.Object">
         <description>The action for editing a JSON/XML Request Custom Field type configuration.</description>
         <actions>
-            <action name="ru.andreymarkelov.atlas.plugins.requestedfiedls.action.EditConfiguration" alias="EditRequestFieldConfig">
+            <action name="ru.andreymarkelov.atlas.plugins.requestedfiedls.action.EditRequestFieldConfig" alias="EditRequestFieldConfig">
                 <view name="input">/ru/andreymarkelov/atlas/plugins/requestedfiedls/templates/action/edit-config.vm</view>
             </action>
         </actions>
     </webwork1>
 
     <!-- Component Imports -->
-    <component key="requestedfields-plugindata" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginDataImpl" public="true">
-        <interface>ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData</interface>
+    <component key="requestedfields-datamanager" class="ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.RequestFieldDataManagerImpl" public="true">
+        <interface>ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.RequestFieldDataManager</interface>
     </component>
     <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties"/>
     <component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory"/>

@@ -11,7 +11,7 @@ import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.RequestFieldDataManager;
 import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
 import ru.andreymarkelov.atlas.plugins.requestedfiedls.util.HttpSender;
 
@@ -30,13 +30,13 @@ import static com.atlassian.jira.component.ComponentAccessor.getOSGiComponentIns
 
 public class SelectTextCustomFieldValueProvider implements CustomFieldValueProvider {
     private List<FieldConfig> configs;
-    private PluginData pluginData;
+    private RequestFieldDataManager requestFieldDataManager;
     private boolean isXmlField;
 
     public SelectTextCustomFieldValueProvider(List<FieldConfig> configs, boolean isXmlField) {
         this.configs = configs;
         this.isXmlField = isXmlField;
-        this.pluginData = getOSGiComponentInstanceOfType(PluginData.class);
+        this.requestFieldDataManager = getOSGiComponentInstanceOfType(RequestFieldDataManager.class);
     }
 
     @SuppressWarnings("unchecked")
@@ -62,7 +62,7 @@ public class SelectTextCustomFieldValueProvider implements CustomFieldValueProvi
     public List<String> getStringValue(CustomField customField, FieldValuesHolder fieldValuesHolder) {
         List<String> values = new ArrayList<>();
         for (FieldConfig fieldConfig : configs) {
-            JSONFieldData data = pluginData.getJSONFieldData(fieldConfig);
+            JSONFieldData data = requestFieldDataManager.getJSONFieldData(fieldConfig);
             if (data != null) {
                 if (isXmlField) {
                     values.addAll(getXmlData(data));

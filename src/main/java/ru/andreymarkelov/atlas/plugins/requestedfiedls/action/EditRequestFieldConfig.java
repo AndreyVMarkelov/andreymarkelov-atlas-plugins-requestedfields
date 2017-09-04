@@ -5,17 +5,17 @@ import com.atlassian.jira.security.GlobalPermissionManager;
 import com.atlassian.jira.security.JiraAuthenticationContext;
 import com.atlassian.jira.security.xsrf.RequiresXsrfCheck;
 import com.atlassian.jira.web.action.admin.customfields.AbstractEditConfigurationItemAction;
-import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.PluginData;
+import ru.andreymarkelov.atlas.plugins.requestedfiedls.manager.RequestFieldDataManager;
 import ru.andreymarkelov.atlas.plugins.requestedfiedls.model.JSONFieldData;
 
 import static com.atlassian.jira.permission.GlobalPermissionKey.ADMINISTER;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-public class EditConfiguration extends AbstractEditConfigurationItemAction {
+public class EditRequestFieldConfig extends AbstractEditConfigurationItemAction {
     private static final long serialVersionUID = -4644319955468389371L;
 
-    private final PluginData pluginData;
+    private final RequestFieldDataManager requestFieldDataManager;
     private final JiraAuthenticationContext authenticationContext;
     private final GlobalPermissionManager globalPermissionManager;
 
@@ -27,20 +27,20 @@ public class EditConfiguration extends AbstractEditConfigurationItemAction {
     private String reqData;
     private String reqPath;
 
-    public EditConfiguration(
+    public EditRequestFieldConfig(
             ManagedConfigurationItemService managedConfigurationItemService,
-            PluginData pluginData,
+            RequestFieldDataManager requestFieldDataManager,
             JiraAuthenticationContext authenticationContext,
             GlobalPermissionManager globalPermissionManager) {
         super(managedConfigurationItemService);
-        this.pluginData = pluginData;
+        this.requestFieldDataManager = requestFieldDataManager;
         this.authenticationContext = authenticationContext;
         this.globalPermissionManager = globalPermissionManager;
     }
 
     @Override
     public String doDefault() throws Exception {
-        JSONFieldData data = pluginData.getJSONFieldData(getFieldConfig());
+        JSONFieldData data = requestFieldDataManager.getJSONFieldData(getFieldConfig());
         if (data != null) {
             this.url = data.getUrl();
             this.user = data.getUser();
@@ -60,7 +60,7 @@ public class EditConfiguration extends AbstractEditConfigurationItemAction {
             return "securitybreach";
         }
 
-        pluginData.storeJSONFieldData(
+        requestFieldDataManager.storeJSONFieldData(
                 getFieldConfig(),
                 new JSONFieldData(url, user, password, reqType, reqHeaders, isXmlField() ? "xml" : "json", reqData, reqPath)
         );
