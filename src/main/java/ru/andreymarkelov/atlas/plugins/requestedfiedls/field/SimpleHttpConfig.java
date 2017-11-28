@@ -44,6 +44,7 @@ public class SimpleHttpConfig implements FieldConfigItemType {
             parms.put("reqHeaders", data.getReqHeaders());
             parms.put("reqData", data.getReqData());
             parms.put("reqPath", data.getReqPath());
+            parms.put("sortOrder", data.getSortOrder());
         }
         return parms;
     }
@@ -76,6 +77,7 @@ public class SimpleHttpConfig implements FieldConfigItemType {
             parms.put("reqHeaders", data.getReqHeaders());
             parms.put("reqData", data.getReqData());
             parms.put("reqPath", data.getReqPath());
+            parms.put("sortOrder", data.getSortOrder());
             parms.put("isXmlField", isXmlField);
         }
 

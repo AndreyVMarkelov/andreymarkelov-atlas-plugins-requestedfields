@@ -9,6 +9,7 @@ public class JSONFieldData {
     private String reqData;
     private String reqPath;
     private String reqDataType;
+    private String sortOrder;
 
     public JSONFieldData() {
     }
@@ -21,7 +22,8 @@ public class JSONFieldData {
             String reqHeaders,
             String reqDataType,
             String reqData,
-            String reqPath) {
+            String reqPath,
+            String sortOrder) {
         this.url = url;
         this.user = user;
         this.password = password;
@@ -30,6 +32,7 @@ public class JSONFieldData {
         this.reqDataType = reqDataType;
         this.reqData = reqData;
         this.reqPath = reqPath;
+        this.sortOrder = sortOrder;
     }
 
     public String getPassword() {
@@ -96,6 +99,14 @@ public class JSONFieldData {
         this.reqHeaders = reqHeaders;
     }
 
+    public String getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(String sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
     @Override
     public String toString() {
         return "JSONFieldData{" +
@@ -107,6 +118,7 @@ public class JSONFieldData {
                 ", reqData='" + reqData + '\'' +
                 ", reqPath='" + reqPath + '\'' +
                 ", reqDataType='" + reqDataType + '\'' +
+                ", sortOrder='" + sortOrder + '\'' +
                 '}';
     }
 }

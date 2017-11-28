@@ -66,7 +66,11 @@ public class XmlHttpRunner {
             res.setRawData(xml);
             if (values != null) {
                 if (!values.isEmpty()) {
-                    Collections.sort(values);
+                    if ("ASC".equals(data.getSortOrder())) {
+                        Collections.sort(values);
+                    } else if ("DESC".equals(data.getSortOrder())) {
+                        Collections.sort(values, Collections.reverseOrder());
+                    }
                 }
                 res.setVals(values);
             }

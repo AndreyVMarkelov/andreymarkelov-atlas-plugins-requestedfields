@@ -30,12 +30,16 @@
     <div class="field-group">
         <label for="reqPath">
             #if($isXmlField)
-            ${i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.xml')}:
+            ${i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqPath.xml')}:
             #else
-            ${i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.json')}:
+            ${i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqPath.json')}:
             #end
         </label>
         <span id="reqPath" class="field-value">${reqPath}</span>
+    </div>
+    <div class="field-group">
+        <label for="sortOrder">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.sortOrder"):</label>
+        <span id="sortOrder" class="field-value">${sortOrder}</span>
     </div>
 </form>
 #end

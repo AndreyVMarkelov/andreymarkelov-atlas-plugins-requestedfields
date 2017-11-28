@@ -26,6 +26,7 @@ public class EditRequestFieldConfig extends AbstractEditConfigurationItemAction 
     private String reqHeaders;
     private String reqData;
     private String reqPath;
+    private String sortOrder;
 
     public EditRequestFieldConfig(
             ManagedConfigurationItemService managedConfigurationItemService,
@@ -49,6 +50,7 @@ public class EditRequestFieldConfig extends AbstractEditConfigurationItemAction 
             this.reqHeaders = data.getReqHeaders();
             this.reqData = data.getReqData();
             this.reqPath = data.getReqPath();
+            this.sortOrder = data.getSortOrder();
         }
         return INPUT;
     }
@@ -62,7 +64,7 @@ public class EditRequestFieldConfig extends AbstractEditConfigurationItemAction 
 
         requestFieldDataManager.storeJSONFieldData(
                 getFieldConfig(),
-                new JSONFieldData(url, user, password, reqType, reqHeaders, isXmlField() ? "xml" : "json", reqData, reqPath)
+                new JSONFieldData(url, user, password, reqType, reqHeaders, isXmlField() ? "xml" : "json", reqData, reqPath, sortOrder)
         );
         return getRedirect("/secure/admin/ConfigureCustomField!default.jspa?customFieldId=" + getFieldConfig().getCustomField().getIdAsLong().toString());
     }
@@ -79,8 +81,8 @@ public class EditRequestFieldConfig extends AbstractEditConfigurationItemAction 
             addError(
                     "reqPath",
                     authenticationContext.getI18nHelper().getText(isXmlField() ?
-                            "ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.xml.error.empty" :
-                            "ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.json.error.empty"));
+                            "ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqPath.xml.error.empty" :
+                            "ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqPath.json.error.empty"));
         }
 
         if (isNotBlank(reqHeaders)) {
@@ -152,5 +154,13 @@ public class EditRequestFieldConfig extends AbstractEditConfigurationItemAction 
 
     public void setReqHeaders(String reqHeaders) {
         this.reqHeaders = reqHeaders;
+    }
+
+    public String getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(String sortOrder) {
+        this.sortOrder = sortOrder;
     }
 }

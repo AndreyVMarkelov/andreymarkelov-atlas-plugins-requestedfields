@@ -105,12 +105,24 @@
                 <div class="description">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.desc")</div>
             </div>
             <div class="field-group">
-                <label for="reqPath">#if($action.isXmlField())$i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.xml')#else$i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.json')#end<span class="aui-icon icon-required"/></label>
+                <label for="reqPath">#if($action.isXmlField())$i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqPath.xml')#else$i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqPath.json')#end<span class="aui-icon icon-required"/></label>
                 <input type="text" class="text long-field" name="reqPath" id="reqPath" value="$!{action.getReqPath()}"/>
                 #if($action.getErrors().containsKey("reqPath"))
                 <div class="error">$action.getErrors().get("reqPath")</div>
                 #end
-                <div class="description">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqdata.desc")</div>
+                <div class="description">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.reqPath.desc")</div>
+            </div>
+            <div class="field-group">
+                <label for="sortOrder">$i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.sortOrder')<span class="aui-icon icon-required"/></label>
+                <select class="select" id="sortOrder" name="sortOrder">
+                    <option #if($action.getSortOrder() == "ASC")selected="selected"#end value="ASC">$i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.sortOrder.asc')</option>
+                    <option #if($action.getSortOrder() == "DESC")selected="selected"#end value="DESC">$i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.sortOrder.des')</option>
+                    <option #if($action.getSortOrder() == "NATURAL")selected="selected"#end value="NATURAL">$i18n.getText('ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.sortOrder.natural')</option>
+                </select>
+                #if($action.getErrors().containsKey("sortOrder"))
+                    <div class="error">$action.getErrors().get("sortOrder")</div>
+                #end
+                <div class="description">$i18n.getText("ru.andreymarkelov.atlas.plugins.requestedfields.fieldconfig.sortOrder.desc")</div>
             </div>
             <div class="buttons-container">
                 <div class="buttons">
