@@ -18,6 +18,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.ssl.TrustStrategy;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ import java.net.MalformedURLException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +42,12 @@ public class HttpSender {
 
     private static SSLContext createSslContext() {
         try {
-            return new SSLContextBuilder().loadTrustMaterial(null, (x509Certificates, authType) -> true).build();
+            return new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+                @Override
+                public boolean isTrusted(X509Certificate[] x509Certificates, String authType) {
+                    return true;
+                }
+            }).build();
         } catch (NoSuchAlgorithmException e) {
             log.error("Error creating SSL context", e);
             throw new RuntimeException("Error creating SSL context. No such algorithm.");

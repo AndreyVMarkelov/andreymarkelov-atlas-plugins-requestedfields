@@ -84,16 +84,19 @@ public class SelectTextCustomFieldSearcher extends ExactTextSearcher implements 
         return new AbstractCustomFieldStatisticsMapper(customField) {
             @Override
             public Comparator<?> getComparator() {
-                return (Comparator<Object>) (o1, o2) -> {
-                    if (o1 == null && o2 == null) {
-                        return 0;
-                    } else if (o1 == null) {
-                        return 1;
-                    } else if (o2 == null) {
-                        return -1;
-                    }
+                return new Comparator<Object>() {
+                    @Override
+                    public int compare(Object o1, Object o2) {
+                        if (o1 == null && o2 == null) {
+                            return 0;
+                        } else if (o1 == null) {
+                            return 1;
+                        } else if (o2 == null) {
+                            return -1;
+                        }
 
-                    return ((String) o1).compareTo((String) o2);
+                        return ((String) o1).compareTo((String) o2);
+                    }
                 };
             }
 
