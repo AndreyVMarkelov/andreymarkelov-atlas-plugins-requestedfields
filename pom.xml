@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>ru.andreymarkelov.atlas.plugins</groupId>
     <artifactId>requestedfields</artifactId>
-    <version>1.2.6</version>
+    <version>1.2.7</version>
     <packaging>atlassian-plugin</packaging>
 
     <organization>
@@ -107,7 +107,9 @@
 
     <properties>
         <jira.version>7.0.0</jira.version>
-        <amps.version>6.3.6</amps.version>
+        <amps.version>6.3.15</amps.version>
         <useFastdevCli>false</useFastdevCli>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 </project>
